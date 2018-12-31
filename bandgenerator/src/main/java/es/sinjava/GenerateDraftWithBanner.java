@@ -35,8 +35,8 @@ public class GenerateDraftWithBanner {
 
 		PdfTemplate pdfTemplate = DraftFactory.getDraft(preview, fieldContainer);
 
-		File tempFile = File.createTempFile("Draft", ".pdf");
-		boolean requirePDFA = false;
+		File tempFile = File.createTempFile("Bannaer", ".pdf");
+		boolean requirePDFA = true;
 
 		BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(), tempFile, requirePDFA);
 

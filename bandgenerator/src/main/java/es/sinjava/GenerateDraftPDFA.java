@@ -36,7 +36,7 @@ public class GenerateDraftPDFA {
 		PdfTemplate pdfTemplate = DraftFactory.getDraft(preview, fieldContainer);
 
 		File tempFile = File.createTempFile("Draft", ".pdf");
-		boolean requirePDFA = true;
+		boolean requirePDFA = false;
 
 		BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(), tempFile, requirePDFA);
 
