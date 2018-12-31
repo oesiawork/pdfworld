@@ -78,8 +78,8 @@ public class BeaGeneratorDelegate {
 	private void loadFont(boolean isPDFA) {
 		logger.trace("Begin loadFont");
 		if (isPDFA) {
-			InputStream tahoma = BeaGeneratorDelegate.class.getClassLoader().getResourceAsStream("arial.ttf");
-			InputStream tahomab = BeaGeneratorDelegate.class.getClassLoader().getResourceAsStream("arialbd.ttf");
+			InputStream tahoma = BeaGeneratorDelegate.class.getClassLoader().getResourceAsStream("Ubuntu-L.ttf");
+			InputStream tahomab = BeaGeneratorDelegate.class.getClassLoader().getResourceAsStream("Ubuntu-R.ttf");
 			try {
 				fontBold = PDType0Font.load(documentOut, tahomab, true);
 				font = PDType0Font.load(documentOut, tahoma, true);
