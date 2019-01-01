@@ -17,29 +17,30 @@ import es.sinjava.pdf.model.PdfTemplate;
 import es.sinjava.util.DraftFactory;
 import es.sinjava.util.TemplateProvider;
 
-public class GenerateDraft {
+public class GenerateDocumentoWithTemplateBand {
 
-	private final static Logger logger = LoggerFactory.getLogger(GenerateDraft.class);
+	private final static Logger logger = LoggerFactory.getLogger(GenerateDocumentoWithTemplateBand.class);
 
 	public static void main(String[] args) throws InvalidPasswordException, IOException, JAXBException {
-		// Leer el archivo a empotrar
 
 		logger.info("Begin main");
 
-		File template = new File(DGAMultiBand.class.getClassLoader().getResource("draft.xml").getFile());
+		File template = new File(GenerateDocumentoWithTemplateBand.class.getClassLoader().getResource("banner.xml").getFile());
+
+		// plantilla para el pdf y relleno de datos
+
 		PdfTemplate preview = TemplateProvider.retrievePdfTemplate(template);
 		FieldContainer fieldContainer = new FieldContainer();
 		Map<String, String> container = new HashMap<>();
 		container.put("nombre", "Andrés Gaudioso");
 		container.put("param", "Andrés$Beatriz$Tomás$Idoia");
 		fieldContainer.setContainer(container);
-
 		PdfTemplate pdfTemplate = DraftFactory.getDraft(preview, fieldContainer);
 
-		File tempFile = File.createTempFile("Draft", ".pdf");
-		boolean isPdfA= false;
-		
-		BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(), tempFile, isPdfA );
+		File tempFile = File.createTempFile("Bannaer", ".pdf");
+		boolean requirePDFA = true;
+
+		BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(), tempFile, requirePDFA);
 
 		logger.info("End main");
 
