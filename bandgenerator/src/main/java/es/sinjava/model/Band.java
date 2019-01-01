@@ -7,16 +7,11 @@ public class Band {
 
 	private final static Logger logger = LoggerFactory.getLogger(Band.class);
 	private Position position;
-	private TypeBand typeBand;
 	private Template template;
 	private String qrCode;
 
 	public enum Position {
 		LEFT, BOTTON
-	}
-
-	public enum TypeBand {
-		LEGEND, CODE
 	}
 
 	public static Band getDefaultBand() {
@@ -48,14 +43,6 @@ public class Band {
 
 	public void setPosition(Position position) {
 		this.position = position;
-	}
-
-	public TypeBand getTypeBand() {
-		return typeBand;
-	}
-
-	public void setTypeBand(TypeBand typeBand) {
-		this.typeBand = typeBand;
 	}
 
 	public String getQrCode() {

@@ -25,7 +25,7 @@ public class GenerateDocument {
 
 		logger.info("Begin main");
 
-		File template = new File(DGAMultiBand.class.getClassLoader().getResource("templateList.xml").getFile());
+		File template = new File(GenerateDocument.class.getClassLoader().getResource("templateList.xml").getFile());
 		PdfTemplate newPDFTemplate = TemplateProvider.retrievePdfTemplate(template);
 
 		File tempFile = File.createTempFile("Generator", ".pdf");
