@@ -114,13 +114,17 @@ public class PDFAssembler {
 		contents.setTextMatrix(matrixVertical);
 		contents.setFont(font, 9);
 
-		processText(contents, band, Template.HEADER, font, fontBold);
+//		processText(contents, band, Template.HEADER, font, fontBold);
+		
+		contents.showText(band.getTemplate().get(Template.HEADER));
 
 		contents.newLineAtOffset(0f, -12f);
-		processText(contents, band, Template.BODY, font, fontBold);
+//		processText(contents, band, Template.BODY, font, fontBold);
+		contents.showText(band.getTemplate().get(Template.BODY));
 
 		contents.newLineAtOffset(0f, -12f);
-		processText(contents, band, Template.FOOTER, font, fontBold);
+//		processText(contents, band, Template.FOOTER, font, fontBold);
+		contents.showText(band.getTemplate().get(Template.FOOTER));
 
 		contents.endText();
 		contents.restoreGraphicsState();

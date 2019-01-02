@@ -13,10 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.sinjava.model.Band;
+import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
 import es.sinjava.pdf.generator.BeaGenerator;
 import es.sinjava.pdf.model.PdfTemplate;
+import es.sinjava.util.BandFactory;
 import es.sinjava.util.BandGenerator;
 import es.sinjava.util.DraftFactory;
 import es.sinjava.util.TemplateProvider;
@@ -53,8 +55,12 @@ public class GenerateDraftWithBanner {
 				GenerateDraftWithBanner.class.getClassLoader().getResource("bandTemplate.xml").getFile());
 
 		BandTemplate bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
+		
+		FieldContainer fc = BandSelloOrgano.build("CSV8976450048556", "Andrés Gaudioso Simón",
+				"https://aplicaciones.aragon.es/ccsv_pub/", "13/07/2009",
+				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
 
-		Band band = BandFactory.getBand(bandTemplate, fieldContainer );
+		Band band = BandFactory.getBand(bandTemplate, fc );
 		BandGenerator.getInstance(documentoBase, band).buildAsTempFile();
 
 	}

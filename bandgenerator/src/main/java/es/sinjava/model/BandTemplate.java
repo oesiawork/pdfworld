@@ -9,6 +9,7 @@ public class BandTemplate {
 	private String lineOne;
 	private String lineTwo;
 	private String lineTree;
+	private String logo;
 	private Band.Position position;
 
 	public String getName() {
@@ -49,6 +50,14 @@ public class BandTemplate {
 
 	public void setPosition(Band.Position position) {
 		this.position = position;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
 }

@@ -16,6 +16,7 @@ import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
 import es.sinjava.model.Template;
+import es.sinjava.util.BandFactory;
 import es.sinjava.util.BandGenerator;
 import es.sinjava.util.TemplateProvider;
 
