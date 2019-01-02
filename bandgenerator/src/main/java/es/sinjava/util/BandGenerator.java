@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,8 @@ public class BandGenerator {
 		File tempFile = null;
 		PDFAssembler pdfAssembler = new PDFAssembler();
 		try {
-			PDDocument documentOut = pdfAssembler.build(document, band);
+			PDFont font = PDType1Font.HELVETICA;
+			PDDocument documentOut = pdfAssembler.build(document, band,font);
 			tempFile = File.createTempFile("Bea", ".pdf");
 			documentOut.save(tempFile);
 		} catch (IOException e) {

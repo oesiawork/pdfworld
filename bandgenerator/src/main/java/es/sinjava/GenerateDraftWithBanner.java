@@ -61,6 +61,7 @@ public class GenerateDraftWithBanner {
 				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
 
 		Band band = BandFactory.getBand(bandTemplate, fc );
+		band.setQrCode("https://aplicaciones.aragon.es/ccsv_pub/CSV8976450048556");
 		BandGenerator.getInstance(documentoBase, band).buildAsTempFile();
 
 	}

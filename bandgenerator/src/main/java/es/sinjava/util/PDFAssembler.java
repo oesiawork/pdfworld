@@ -38,7 +38,7 @@ public class PDFAssembler {
 
 	// Precargamos los valores
 
-	public PDDocument build(PDDocument document, Band band) throws IOException {
+	public PDDocument build(PDDocument document, Band band, PDFont font) throws IOException {
 
 		logger.info("Begin build");
 
@@ -47,8 +47,8 @@ public class PDFAssembler {
 		documentOut.addPage(blankPage);
 		// Metemos la imagen
 
-		PDImageXObject pdImage = PDImageXObject
-				.createFromFile(DGABand.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);
+		PDImageXObject pdImage = PDImageXObject.createFromFile(
+				PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);
 
 		PDPageContentStream contents = new PDPageContentStream(documentOut, blankPage);
 
@@ -60,9 +60,6 @@ public class PDFAssembler {
 
 		contents.restoreGraphicsState();
 
-		PDFont font = PDType1Font.HELVETICA;
-		PDFont fontBold = PDType1Font.HELVETICA_BOLD;
-
 		// Lo inicializamos como matrix horizontal
 		Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
 
@@ -71,6 +68,25 @@ public class PDFAssembler {
 			matrixVertical.rotate(Math.PI / 2);
 		}
 
+		insertQRCode(band, documentOut, contents);
+
+		// metemos el texto
+		pushContent(band, contents, font, matrixVertical);
+
+		LayerUtility layerUtility = new LayerUtility(documentOut);
+		Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
+		matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
+		contents.transform(matrix);
+		PDFormXObject form = layerUtility.importPageAsForm(document, 0);
+		contents.drawForm(form);
+		contents.restoreGraphicsState();
+		contents.saveGraphicsState();
+		contents.close();
+
+		return documentOut;
+	}
+
+	private void insertQRCode(Band band, PDDocument documentOut, PDPageContentStream contents) throws IOException {
 		if (StringUtils.isNotBlank(band.getQrCode())) {
 			// Insertamos el código qr
 			QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -88,85 +104,26 @@ public class PDFAssembler {
 			}
 
 		}
-
-		// metemos el texto
-		pushContent(band, contents, font, fontBold, matrixVertical);
-
-		LayerUtility layerUtility = new LayerUtility(documentOut);
-		Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
-		matrix.translate(50f, 0f);
-		contents.transform(matrix);
-		PDFormXObject form = layerUtility.importPageAsForm(document, 0);
-		contents.drawForm(form);
-		contents.restoreGraphicsState();
-
-		// draw a scaled form
-		contents.saveGraphicsState();
-		contents.close();
-
-		return documentOut;
 	}
 
-	private void pushContent(Band band, PDPageContentStream contents, PDFont font, PDFont fontBold,
-			Matrix matrixVertical) throws IOException {
+	private void pushContent(Band band, PDPageContentStream contents, PDFont font, Matrix matrixVertical)
+			throws IOException {
 		logger.debug("Begin pushContent");
 		contents.beginText();
 		contents.setTextMatrix(matrixVertical);
 		contents.setFont(font, 9);
 
-//		processText(contents, band, Template.HEADER, font, fontBold);
-		
 		contents.showText(band.getTemplate().get(Template.HEADER));
 
 		contents.newLineAtOffset(0f, -12f);
-//		processText(contents, band, Template.BODY, font, fontBold);
 		contents.showText(band.getTemplate().get(Template.BODY));
 
 		contents.newLineAtOffset(0f, -12f);
-//		processText(contents, band, Template.FOOTER, font, fontBold);
 		contents.showText(band.getTemplate().get(Template.FOOTER));
 
 		contents.endText();
 		contents.restoreGraphicsState();
 		logger.debug("End pushContent");
-	}
-
-	private void processText(PDPageContentStream contents, Band band, String header, PDFont font, PDFont fontBold)
-			throws IOException {
-
-		logger.trace("Procesando texto : " + header);
-		if (!band.getTemplate().get(header).contains(">>>")) {
-			contents.showText(band.getTemplate().get(header));
-		} else {
-			String[] fragments = band.getTemplate().get(header).split(">>");
-
-			// Here values to replace
-			FieldContainer fc = band.getTemplate().getFieldContainer();
-
-			// every fragment can start by a field
-			for (String fragment : fragments) {
-				logger.trace("Procesando " + fragment);
-				if (fragment.startsWith(">")) {
-					// bold font
-					String[] fragmentsArray = fragment.split(">");
-
-					contents.setFont(fontBold, 9);
-					String replacement = fc.getContainer().get(fragmentsArray[1]) != null
-							? fc.getContainer().get(fragmentsArray[1])
-							: "";
-					contents.showText(replacement);
-
-					// restore default and write
-					contents.setFont(font, 9);
-					contents.showText(fragmentsArray[2]);
-				} else {
-					contents.showText(fragment);
-				}
-
-			}
-
-		}
-
 	}
 
 }
