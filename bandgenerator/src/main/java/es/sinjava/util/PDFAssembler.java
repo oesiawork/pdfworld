@@ -3,6 +3,7 @@ package es.sinjava.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.LayerUtility;
@@ -11,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -46,6 +48,8 @@ public class PDFAssembler {
 		PDPage blankPage = new PDPage();
 		documentOut.addPage(blankPage);
 		// Metemos la imagen
+	
+	
 
 		PDImageXObject pdImage = PDImageXObject.createFromFile(
 				PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);

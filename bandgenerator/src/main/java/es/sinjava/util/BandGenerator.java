@@ -3,15 +3,18 @@ package es.sinjava.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.sinjava.model.Band;
+import es.sinjava.pdf.generator.BeaGeneratorDelegate;
 
 public class BandGenerator {
 
@@ -44,8 +47,9 @@ public class BandGenerator {
 		File tempFile = null;
 		PDFAssembler pdfAssembler = new PDFAssembler();
 		try {
-			PDFont font = PDType1Font.HELVETICA;
-			PDDocument documentOut = pdfAssembler.build(document, band,font);
+			InputStream arial = PDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+			PDFont font = PDType0Font.load(document, arial, true);
+			PDDocument documentOut = pdfAssembler.build(document, band, font);
 			tempFile = File.createTempFile("Bea", ".pdf");
 			documentOut.save(tempFile);
 		} catch (IOException e) {
