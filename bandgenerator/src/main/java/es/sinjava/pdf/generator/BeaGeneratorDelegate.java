@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
@@ -43,9 +44,9 @@ public class BeaGeneratorDelegate {
 	}
 
 	protected void pushContent(List<StoreContent> scList, boolean isPDFA) throws IOException {
-		logger.info("Begin pusgContent");
-		PDPage page0 = documentOut.getPage(0);
-		PDPageContentStream contents = new PDPageContentStream(documentOut, page0);
+		logger.info("Begin pushContent");
+		PDPage currentPage = documentOut.getPage(0);
+		PDPageContentStream contents = new PDPageContentStream(documentOut, currentPage);
 
 		loadFont(isPDFA);
 
@@ -68,11 +69,31 @@ public class BeaGeneratorDelegate {
 				writeTitle(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.BANNER)) {
 				logger.debug("Ha llegado un banner");
+			} else if (sc.getContentType().equals(StoreContent.ContentType.NLINE)) {
+				// Escribimos un párrafo vacio
+				writeBody("", contents);
+			} else if (sc.getContentType().equals(StoreContent.ContentType.NPAGE)) {
+				// nos posicionamos sobre una nueva página
+				contents = resetToNewPage(contents);
 			}
+
 		}
 		contents.close();
 		logger.info("End pushContent");
 
+	}
+
+	private PDPageContentStream resetToNewPage(PDPageContentStream contents) throws IOException {
+		PDPage currentPage;
+		contents.endText();
+		contents.close();
+		currentPage = new PDPage();
+		documentOut.addPage(currentPage);
+		logger.debug("Tengo estas páginas " + documentOut.getNumberOfPages());
+		contents = new PDPageContentStream(documentOut, currentPage, AppendMode.APPEND, true, true);
+		contents.beginText();
+		contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
+		return contents;
 	}
 
 	private void loadFont(boolean isPDFA) {
@@ -98,8 +119,6 @@ public class BeaGeneratorDelegate {
 
 		PDImageXObject pdImage = PDImageXObject.createFromFile(
 				BeaGeneratorDelegate.class.getClassLoader().getResource(textContent).getFile(), documentOut);
-
-
 
 		contents.drawImage(pdImage, MARGIN, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER), X_SIZE_BANNER, Y_SIZE_BANNER);
 		contents.restoreGraphicsState();
@@ -191,7 +210,7 @@ public class BeaGeneratorDelegate {
 
 	private float getLineStackAndIncrement(int sizeFont) {
 
-		float lineStackCurrent = (containsBanner) ? lineStack-(Y_SIZE_BANNER) : lineStack;
+		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
 		logger.info("posición " + lineStackCurrent);
 		lineStack = lineStack - sizeFont;
 		return lineStackCurrent;

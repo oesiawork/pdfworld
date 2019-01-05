@@ -18,7 +18,7 @@ public class GenerateDocument {
 	private final static Logger logger = LoggerFactory.getLogger(GenerateDocument.class);
 
 	private static File entrada = new File(
-			GenerateDocument.class.getClassLoader().getResource("eclipse.pdf").getFile());
+			GenerateDocument.class.getClassLoader().getResource("toembed.pdf").getFile());
 
 	public static void main(String[] args) throws InvalidPasswordException, IOException, JAXBException {
 		// Leer el archivo a empotrar
