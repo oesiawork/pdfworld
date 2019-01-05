@@ -38,6 +38,7 @@ public class BeaGeneratorDelegate {
 	protected PDDocument documentOut;
 
 	private float lineStack = HEIGHT - 10f * DEFAULT_SIZE_FONT;
+	private PDImageXObject pdImage;
 
 	public BeaGeneratorDelegate() {
 		super();
@@ -78,13 +79,13 @@ public class BeaGeneratorDelegate {
 				// lo dejamos a punto para seguir escribiendo
 				contents.beginText();
 				contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
-				
+
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NBANNERPAGE)) {
 				// nos posicionamos sobre una nueva página
 				contents = resetToNewPage(contents);
 				writeBanner(sc.getTextContent(), contents);
 				contents.beginText();
-				contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER ));
+				contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER));
 			}
 
 		}
@@ -101,7 +102,7 @@ public class BeaGeneratorDelegate {
 		documentOut.addPage(currentPage);
 		logger.debug("Tengo estas páginas " + documentOut.getNumberOfPages());
 		contents = new PDPageContentStream(documentOut, currentPage, AppendMode.APPEND, true, true);
-	
+
 		return contents;
 	}
 
@@ -126,9 +127,11 @@ public class BeaGeneratorDelegate {
 
 	private void writeBanner(String textContent, PDPageContentStream contents) throws IOException {
 
-		PDImageXObject pdImage = PDImageXObject.createFromFile(
-				BeaGeneratorDelegate.class.getClassLoader().getResource(textContent).getFile(), documentOut);
+		if (pdImage == null) {
+			pdImage = PDImageXObject.createFromFile(
+					BeaGeneratorDelegate.class.getClassLoader().getResource(textContent).getFile(), documentOut);
 
+		}
 		contents.drawImage(pdImage, MARGIN, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER), X_SIZE_BANNER, Y_SIZE_BANNER);
 		contents.restoreGraphicsState();
 
@@ -218,7 +221,6 @@ public class BeaGeneratorDelegate {
 	}
 
 	private float getLineStackAndIncrement(int sizeFont) {
-
 		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
 		logger.info("posición " + lineStackCurrent);
 		lineStack = lineStack - sizeFont;

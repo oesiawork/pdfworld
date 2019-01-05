@@ -23,15 +23,15 @@ import es.sinjava.util.BandGenerator;
 import es.sinjava.util.DraftFactory;
 import es.sinjava.util.TemplateProvider;
 
-public class GenerateMultipage {
+public class GenerateMultipageWithBand {
 
-	private final static Logger logger = LoggerFactory.getLogger(GenerateMultipage.class);
+	private final static Logger logger = LoggerFactory.getLogger(GenerateMultipageWithBand.class);
 
 	public static void main(String[] args) throws InvalidPasswordException, IOException, JAXBException {
 
 		logger.info("Begin main");
 
-		File template = new File(GenerateMultipage.class.getClassLoader().getResource("multiBanner.xml").getFile());
+		File template = new File(GenerateMultipageWithBand.class.getClassLoader().getResource("multiBanner.xml").getFile());
 
 		// plantilla para el pdf y relleno de datos
 
@@ -49,20 +49,20 @@ public class GenerateMultipage {
 		BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(), tempFile, requirePDFA);
 		logger.info("End main");
 
-//		PDDocument documentoBase = PDDocument.load(tempFile);
+		PDDocument documentoBase = PDDocument.load(tempFile);
 
-//		File bandTemplateFile = new File(
-//				GenerateMultipage.class.getClassLoader().getResource("bandTemplate.xml").getFile());
-//
-//		BandTemplate bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
-//		
-//		FieldContainer fc = BandSelloOrgano.build("CSV8976450048556", "Andrés Gaudioso Simón",
-//				"https://aplicaciones.aragon.es/ccsv_pub/", "13/07/2009",
-//				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
-//
-//		Band band = BandFactory.getBand(bandTemplate, fc );
-//		band.setQrCode("https://aplicaciones.aragon.es/ccsv_pub/CSV8976450048556");
-//		BandGenerator.getInstance(documentoBase, band).buildAsTempFile();
+		File bandTemplateFile = new File(
+				GenerateMultipage.class.getClassLoader().getResource("bandTemplate.xml").getFile());
+
+		BandTemplate bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
+		
+		FieldContainer fc = BandSelloOrgano.build("CSV8976450048556", "Andrés Gaudioso Simón",
+				"https://aplicaciones.aragon.es/ccsv_pub/", "13/07/2009",
+				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
+
+		Band band = BandFactory.getBand(bandTemplate, fc );
+		band.setQrCode("https://aplicaciones.aragon.es/ccsv_pub/CSV8976450048556");
+		BandGenerator.getInstance(documentoBase, band).buildAsTempFile();
 
 	}
 }

@@ -4,12 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.LayerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
@@ -37,6 +39,7 @@ public class PDFAssembler {
 	private static final float HEIGHT = PDRectangle.A4.getHeight();
 	private static final float FACTOR_REDUCED = 0.1f;
 	private final Logger logger = LoggerFactory.getLogger(PDFAssembler.class);
+	private PDImageXObject pdImageBand;
 
 	// Precargamos los valores
 
@@ -44,48 +47,56 @@ public class PDFAssembler {
 
 		logger.info("Begin build");
 
-		PDDocument documentOut = new PDDocument();
-		PDPage blankPage = new PDPage();
-		documentOut.addPage(blankPage);
+		logger.info("Documento de entrada tiene {} páginas", document.getNumberOfPages());
+
 		// Metemos la imagen
-	
-	
+		PDDocument documentOut = new PDDocument();
 
-		PDImageXObject pdImage = PDImageXObject.createFromFile(
-				PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);
-
-		PDPageContentStream contents = new PDPageContentStream(documentOut, blankPage);
-
-		if (band.getPosition().equals(Band.Position.BOTTON)) {
-			contents.drawImage(pdImage, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
-		} else {
-			contents.drawImage(pdImage, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
+		if (pdImageBand == null) {
+			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
+			pdImageBand = PDImageXObject.createFromFile(
+					PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);
 		}
 
-		contents.restoreGraphicsState();
+		for (int currentPage = 0; currentPage < document.getNumberOfPages(); currentPage++) {
 
-		// Lo inicializamos como matrix horizontal
-		Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
+			PDPage blankPage = new PDPage();
+			documentOut.addPage(blankPage);
+			PDPageContentStream contents = new PDPageContentStream(documentOut, blankPage);
 
-		if (band.getPosition().equals(Band.Position.LEFT)) {
-			matrixVertical = Matrix.getTranslateInstance(25f, 100f);
-			matrixVertical.rotate(Math.PI / 2);
+			if (band.getPosition().equals(Band.Position.BOTTON)) {
+				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
+			} else {
+				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
+			}
+
+			contents.restoreGraphicsState();
+
+			// Lo inicializamos como matrix horizontal
+			Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
+
+			if (band.getPosition().equals(Band.Position.LEFT)) {
+				matrixVertical = Matrix.getTranslateInstance(25f, 100f);
+				matrixVertical.rotate(Math.PI / 2);
+			}
+
+			insertQRCode(band, documentOut, contents);
+
+			// metemos el texto
+			pushContent(band, contents, font, matrixVertical);
+
+			LayerUtility layerUtility = new LayerUtility(documentOut);
+			Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
+			matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
+			contents.transform(matrix);
+			PDFormXObject form = layerUtility.importPageAsForm(document, currentPage);
+			contents.drawForm(form);
+			contents.restoreGraphicsState();
+			contents.saveGraphicsState();
+			contents.close();
 		}
 
-		insertQRCode(band, documentOut, contents);
-
-		// metemos el texto
-		pushContent(band, contents, font, matrixVertical);
-
-		LayerUtility layerUtility = new LayerUtility(documentOut);
-		Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
-		matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
-		contents.transform(matrix);
-		PDFormXObject form = layerUtility.importPageAsForm(document, 0);
-		contents.drawForm(form);
-		contents.restoreGraphicsState();
-		contents.saveGraphicsState();
-		contents.close();
+//		
 
 		return documentOut;
 	}
