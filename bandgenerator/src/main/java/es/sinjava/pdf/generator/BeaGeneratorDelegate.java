@@ -75,6 +75,16 @@ public class BeaGeneratorDelegate {
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NPAGE)) {
 				// nos posicionamos sobre una nueva página
 				contents = resetToNewPage(contents);
+				// lo dejamos a punto para seguir escribiendo
+				contents.beginText();
+				contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
+				
+			} else if (sc.getContentType().equals(StoreContent.ContentType.NBANNERPAGE)) {
+				// nos posicionamos sobre una nueva página
+				contents = resetToNewPage(contents);
+				writeBanner(sc.getTextContent(), contents);
+				contents.beginText();
+				contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER ));
 			}
 
 		}
@@ -91,8 +101,7 @@ public class BeaGeneratorDelegate {
 		documentOut.addPage(currentPage);
 		logger.debug("Tengo estas páginas " + documentOut.getNumberOfPages());
 		contents = new PDPageContentStream(documentOut, currentPage, AppendMode.APPEND, true, true);
-		contents.beginText();
-		contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
+	
 		return contents;
 	}
 

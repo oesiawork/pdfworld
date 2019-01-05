@@ -31,7 +31,7 @@ public class GenerateMultipage {
 
 		logger.info("Begin main");
 
-		File template = new File(GenerateMultipage.class.getClassLoader().getResource("multi.xml").getFile());
+		File template = new File(GenerateMultipage.class.getClassLoader().getResource("multiBanner.xml").getFile());
 
 		// plantilla para el pdf y relleno de datos
 
