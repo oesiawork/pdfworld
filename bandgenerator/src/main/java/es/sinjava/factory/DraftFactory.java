@@ -1,4 +1,4 @@
-package es.sinjava.util;
+package es.sinjava.factory;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,13 +6,13 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.sinjava.factory.BandFactory;
+import es.sinjava.factory.DraftFactory;
 import es.sinjava.model.Band;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
 import es.sinjava.pdf.model.PdfTemplate;
-import es.sinjava.util.BandFactory;
 import es.sinjava.util.BeaPDFAssembler;
-import es.sinjava.util.DraftFactory;
 
 public class DocumentBandGenerator {
 
@@ -24,16 +24,17 @@ public class DocumentBandGenerator {
 		logger.info("Begin buildAsTempFile");
 		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
 
-		BeaGenerator beaGenerator = BeaGenerator.getInstance();
+//		BeaGenerator beaGenerator = BeaGenerator.getInstance();
+		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
 
 		if (bandTemplate == null) {
-
-			beaGenerator.writePDFFile(pdfDraft.getStoreContentList(), orquestationFile, true);
+			
+			beapdfAssembler.write(pdfDraft.getStoreContentList(), null, orquestationFile);
 
 		} else {
 			Band band = BandFactory.getBand(bandTemplate, fc);
 			band.setQrCode("https://aplicaciones.aragon.es/ccsv_pub/CSV8976450048556");
-			BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
+		
 			beapdfAssembler.write(pdfDraft.getStoreContentList(), band, orquestationFile);
 
 		}

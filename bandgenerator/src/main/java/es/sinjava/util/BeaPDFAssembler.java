@@ -56,9 +56,9 @@ public class BeaPDFAssembler {
 		logger.info("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
 		try {
 			pdImageBand = PDImageXObject.createFromFile(
-					PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
+					BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
 			logger.trace("Cargada la imagen de la banda");
-			InputStream arial = PDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
 			logger.trace("Empotrado el tipo de letra de la banda");
 		} catch (IOException e) {
@@ -125,16 +125,20 @@ public class BeaPDFAssembler {
 		document.addPage(blankPage);
 		PDPageContentStream contents = new PDPageContentStream(document, blankPage);
 
-		if (band.getPosition().equals(Band.Position.BOTTON)) {
+		if (band != null && band.getPosition().equals(Band.Position.BOTTON)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
 			logger.debug("Banda de tamaño {}  por {}", WIDTH, HEIGHT * FACTOR_REDUCED);
 			marginLeft = MARGIN_BASE * (1 - FACTOR_REDUCED);
 
-		} else {
+		} else if (band != null && band.getPosition().equals(Band.Position.LEFT)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 			logger.debug("Banda de tamaño {}  por {}", WIDTH * FACTOR_REDUCED, HEIGHT);
 			marginLeft = WIDTH * FACTOR_REDUCED;
+		} else {
+			marginLeft = MARGIN_BASE;
+			return contents;
 		}
+
 		contents.restoreGraphicsState();
 
 		insertQRCode(band, document, contents);
