@@ -31,8 +31,8 @@ public class BeaGeneratorDelegate {
 
 	private static final Logger logger = LoggerFactory.getLogger(BeaGeneratorDelegate.class);
 
-	PDFont fontBold;
-	PDFont font;
+	private PDFont fontBold;
+	private PDFont font;
 	boolean containsBanner;
 
 	protected PDDocument documentOut;
