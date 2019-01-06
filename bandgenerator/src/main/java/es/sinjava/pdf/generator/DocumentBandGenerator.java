@@ -34,7 +34,7 @@ public class DocumentBandGenerator {
 	public static void buildAsFile(File orquestationFile, PdfTemplate pdfTemplate, FieldContainer fieldContainer,
 			BandTemplate bandTemplate, FieldContainer fc) throws IOException {
 
-		logger.info("Begin buildAsTempFile");
+		logger.info("Begin buildAsFile");
 		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
 		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
 		Band band =null;
@@ -76,7 +76,63 @@ public class DocumentBandGenerator {
 		
 		pdDocument.save(orquestationFile);
 	}
+	
+	public static byte[] buildAsByteArray( PdfTemplate pdfTemplate, FieldContainer fieldContainer,
+			BandTemplate bandTemplate, FieldContainer fc) throws IOException {
 
+		logger.info("Begin buildAsFile");
+		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
+		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
+		Band band =null;
+		if (bandTemplate!= null) {
+			band = BandFactory.getBand(bandTemplate, fc);
+			band.setQrCode("https://aplicaciones.aragon.es/ccsv_pub/CSV8976450048556");
+		}
+		
+		PDDocument pdDocument = beapdfAssembler.write(pdfDraft.getStoreContentList(), band);
+		XMPMetadata xmp = XMPMetadata.createXMPMetadata();
+		try {
+			DublinCoreSchema dc = xmp.createAndAddDublinCoreSchema();
+			dc.setTitle("Documento PDF");
+
+			PDFAIdentificationSchema id = xmp.createAndAddPFAIdentificationSchema();
+			id.setPart(1);
+			id.setConformance("B");
+
+			XmpSerializer serializer = new XmpSerializer();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			serializer.serialize(xmp, baos, true);
+
+			PDMetadata metadata = new PDMetadata(pdDocument);
+			metadata.importXMPMetadata(baos.toByteArray());
+			pdDocument.getDocumentCatalog().setMetadata(metadata);
+
+		} catch (BadFieldValueException | TransformerException e) {
+			logger.error("Petada nueva", e);
+		}
+
+		// sRGB output intent
+		InputStream colorProfile = DocumentBandGenerator.class.getClassLoader().getResourceAsStream("pdfa/sRGB.icc");
+		PDOutputIntent intent = new PDOutputIntent(pdDocument, colorProfile);
+		intent.setInfo("sRGB IEC61966-2.1");
+		intent.setOutputCondition("sRGB IEC61966-2.1");
+		intent.setOutputConditionIdentifier("sRGB IEC61966-2.1");
+		intent.setRegistryName("http://www.color.org");
+		pdDocument.getDocumentCatalog().addOutputIntent(intent);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		pdDocument.save(baos);
+		return baos.toByteArray();
+	}
+	
+	public static void addBand(byte[] noband, File withBand, BandTemplate bandTemplate, FieldContainer fc)
+			throws IOException {
+		BeaPDFBandAssembler beaPDFAssembler = new BeaPDFBandAssembler();
+		Band band = BandFactory.getBand(bandTemplate, fc);
+		PDDocument document = PDDocument.load(noband);
+		PDDocument returningFile = beaPDFAssembler.insertBand(document, band);
+		returningFile.save(withBand);
+	}
+	
 	public static void addBand(File noband, File withBand, BandTemplate bandTemplate, FieldContainer fc)
 			throws IOException {
 		BeaPDFBandAssembler beaPDFAssembler = new BeaPDFBandAssembler();

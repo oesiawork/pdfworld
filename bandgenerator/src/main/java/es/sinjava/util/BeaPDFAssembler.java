@@ -1,6 +1,7 @@
 package es.sinjava.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -10,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -28,40 +28,43 @@ import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 import es.sinjava.pdf.model.StoreContent;
 
-public class BeaPDFAssembler {
+public class BeaPDFAssembler extends PDFAssembler {
 
 	private static final float BAND_CORRECTION = 1.5f;
 	private static final int DEFAULT_SIZE_FONT = 12;
-	private static final float WIDTH = PDRectangle.A4.getWidth();
-	private static final float HEIGHT = PDRectangle.A4.getHeight();
 	private static final float FACTOR_REDUCED = 0.1f;
 	private static final float FACTOR_MARGIN = 0.08f;
 	private static final float MARGIN_BASE = WIDTH * FACTOR_MARGIN;
 	private static final float X_SIZE_BANNER = WIDTH - (MARGIN_BASE * 2);
 	private static final float Y_SIZE_BANNER = DEFAULT_SIZE_FONT * 5f;
+	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png")
+			.getFile();
 
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFAssembler.class);
-	private PDDocument document = new PDDocument();
-	private PDImageXObject pdImageBand = null;
+
+	private static PDImageXObject pdImageBand = null;
 	private PDImageXObject pdImage;
-	private PDFont font = null;
 	private float marginLeft;
 	private boolean containsBanner;
 	private float lineStack = HEIGHT - 10f * DEFAULT_SIZE_FONT;
+	private PDType0Font font;
 
 	public BeaPDFAssembler() {
 		logger.info(" Constructor BeaPDFAssembler ");
 		logger.info("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
+
 		try {
-			pdImageBand = PDImageXObject.createFromFile(
-					BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
-			logger.trace("Cargada la imagen de la banda");
+			if (pdImageBand == null) {
+				pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
+				logger.debug("----------Cargada la imagen de la banda");
+			}
 			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
-			logger.trace("Empotrado el tipo de letra de la banda");
+			logger.debug("-----------Empotrado el tipo de letra de la banda");
 		} catch (IOException e) {
 			logger.error("No se ha encontrado un recurso necesario", e);
 		}
+
 	}
 
 	public PDDocument write(List<StoreContent> storeContentList, Band band) throws IOException {
@@ -90,7 +93,7 @@ public class BeaPDFAssembler {
 			} else if (sc.getContentType().equals(StoreContent.ContentType.TITLE)) {
 				writeTitle(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.BANNER)) {
-				logger.debug("Ha llegado un banner");
+				logger.trace("Ha llegado un banner, mi no saber todavía eue hacer");
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NLINE)) {
 				// Escribimos un párrafo vacio
 				writeBody("", contents);

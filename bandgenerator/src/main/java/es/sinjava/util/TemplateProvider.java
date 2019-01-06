@@ -17,7 +17,7 @@ public class TemplateProvider {
 	private final static Logger logger = LoggerFactory.getLogger(TemplateProvider.class);
 
 	public static PdfTemplate retrievePdfTemplate(File fileTemplate) throws JAXBException {
-		logger.debug("Begin retrievePdfTemplate");
+		logger.trace("Begin retrievePdfTemplate");
 		JAXBContext context = JAXBContext.newInstance(PdfTemplate.class);
 		Unmarshaller unMarshaller = context.createUnmarshaller();
 		PdfTemplate pdfTemplate = (PdfTemplate) unMarshaller.unmarshal(fileTemplate);
@@ -25,7 +25,7 @@ public class TemplateProvider {
 	}
 
 	public static BandTemplate retrieveBandTemplate(File fileTemplate) throws JAXBException {
-		logger.debug("Begin retrieveBandTemplate");
+		logger.trace("Begin retrieveBandTemplate");
 		JAXBContext context = JAXBContext.newInstance(BandTemplate.class);
 		Unmarshaller unMarshaller = context.createUnmarshaller();
 		BandTemplate bandTemplate = (BandTemplate) unMarshaller.unmarshal(fileTemplate);

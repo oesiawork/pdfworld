@@ -9,7 +9,6 @@ import org.apache.pdfbox.multipdf.LayerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
@@ -27,40 +26,35 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 
-public class BeaPDFBandAssembler {
+public class BeaPDFBandAssembler extends PDFAssembler {
 
-	private static final float WIDTH = PDRectangle.A4.getWidth();
-	private static final float HEIGHT = PDRectangle.A4.getHeight();
 	private static final float FACTOR_REDUCED = 0.1f;
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFBandAssembler.class);
 	private PDImageXObject pdImageBand;
-	private PDFont font;
+	private PDType0Font font;
 
 	// Precargamos los valores
 
-	public PDDocument insertBand(PDDocument document, Band band) throws IOException {
+	public PDDocument insertBand(PDDocument documentIn, Band band) throws IOException {
 
 		logger.info("Begin build");
 
-		logger.info("Documento de entrada tiene {} páginas", document.getNumberOfPages());
-
-		// Metemos la imagen
-		PDDocument documentOut = new PDDocument();
+		logger.info("Documento de entrada tiene {} páginas", documentIn.getNumberOfPages());
 
 		if (pdImageBand == null) {
 			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
 			pdImageBand = PDImageXObject.createFromFile(
-					BeaPDFBandAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), documentOut);
+					BeaPDFBandAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
 		}
 
 		InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 		font = PDType0Font.load(document, arial, true);
 
-		for (int currentPage = 0; currentPage < document.getNumberOfPages(); currentPage++) {
+		for (int currentPage = 0; currentPage < documentIn.getNumberOfPages(); currentPage++) {
 
 			PDPage blankPage = new PDPage();
-			documentOut.addPage(blankPage);
-			PDPageContentStream contents = new PDPageContentStream(documentOut, blankPage);
+			document.addPage(blankPage);
+			PDPageContentStream contents = new PDPageContentStream(document, blankPage);
 
 			if (band.getPosition().equals(Band.Position.BOTTON)) {
 				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
@@ -78,22 +72,22 @@ public class BeaPDFBandAssembler {
 				matrixVertical.rotate(Math.PI / 2);
 			}
 
-			insertQRCode(band, documentOut, contents);
+			insertQRCode(band, document, contents);
 
 			// metemos el texto
 			pushContent(band, contents, font, matrixVertical);
 
-			LayerUtility layerUtility = new LayerUtility(documentOut);
+			LayerUtility layerUtility = new LayerUtility(document);
 			Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
 			matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
 			contents.transform(matrix);
-			PDFormXObject form = layerUtility.importPageAsForm(document, currentPage);
+			PDFormXObject form = layerUtility.importPageAsForm(documentIn, currentPage);
 			contents.drawForm(form);
 			contents.restoreGraphicsState();
 			contents.saveGraphicsState();
 			contents.close();
 		}
-		return documentOut;
+		return document;
 	}
 
 	public void pushBandPage(PDDocument document, Band band, PDFont font) throws IOException {
