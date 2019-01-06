@@ -1,7 +1,5 @@
 package es.sinjava.pdf.generator;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.sinjava.Orquestation;
 import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
@@ -25,7 +22,7 @@ import es.sinjava.util.TemplateProvider;
 public class DocumentBandGeneratorTest {
 
 	// Logger para rendimiento
-	private final static Logger logger = LoggerFactory.getLogger(Orquestation.class);
+	private final static Logger logger = LoggerFactory.getLogger(DocumentBandGeneratorTest.class);
 	// Lo que van a compartir los test
 	private static PdfTemplate pdfTemplate;
 	private static FieldContainer fieldContainer;
@@ -33,8 +30,6 @@ public class DocumentBandGeneratorTest {
 	private static FieldContainer fcBanda;
 	private static File senuelo;
 	private static byte[] senueloByte;
-	
-	
 
 	@Test
 	public void testBuildAsFile() throws IOException {
@@ -59,7 +54,7 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testBuildAsByteArray() throws IOException {
 		logger.debug("Begin testBuildAsByteArray");
-		fcBanda.getContainer().put(Template.QR,"1828-1598");
+		fcBanda.getContainer().put(Template.QR, "1828-1598");
 		byte[] document = DocumentBandGenerator.buildAsByteArray(pdfTemplate, fieldContainer, bandTemplate, fcBanda);
 		Assert.assertTrue(document.length > 25);
 		logger.debug("End testBuildAsByteArray");
@@ -97,7 +92,8 @@ public class DocumentBandGeneratorTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
-		File templatePDF = new File(Orquestation.class.getClassLoader().getResource("orquest.xml").getFile());
+		File templatePDF = new File(
+				DocumentBandGeneratorTest.class.getClassLoader().getResource("orquest.xml").getFile());
 		pdfTemplate = TemplateProvider.retrievePdfTemplate(templatePDF);
 		// datos parametrizados para la plantilla de pdf
 		fieldContainer = new FieldContainer();
@@ -106,15 +102,17 @@ public class DocumentBandGeneratorTest {
 		container.put("param", "Andrés$Beatriz$Tomás$Carmen");
 		fieldContainer.setContainer(container);
 
-		File bandTemplateFile = new File(Orquestation.class.getClassLoader().getResource("bandTemplate.xml").getFile());
+		File bandTemplateFile = new File(
+				DocumentBandGeneratorTest.class.getClassLoader().getResource("bandTemplate.xml").getFile());
 		bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
 
 		fcBanda = BandSelloOrgano.build("CSV8976450048556", "Andrés Gaudioso Simón",
 				"https://aplicaciones.aragon.es/ccsv_pub/", "13/07/2009",
 				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
 		senuelo = File.createTempFile("senuelo", ".pdf");
-		DocumentBandGenerator.buildAsFile(senuelo, pdfTemplate, fieldContainer, null, null);;
-		
+		DocumentBandGenerator.buildAsFile(senuelo, pdfTemplate, fieldContainer, null, null);
+		;
+
 		senueloByte = DocumentBandGenerator.buildAsByteArray(pdfTemplate, fieldContainer, null, null);
 	}
 

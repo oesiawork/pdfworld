@@ -17,7 +17,6 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import es.sinjava.model.FieldContainer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DocPDFConverter.
  */

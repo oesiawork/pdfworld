@@ -31,7 +31,6 @@ import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 import es.sinjava.pdf.model.StoreContent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BeaPDFAssembler.
  */
@@ -93,11 +92,11 @@ public class BeaPDFAssembler extends PDFAssembler {
 		try {
 			if (pdImageBand == null) {
 				pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
-				logger.debug("----------Cargada la imagen de la banda");
+				logger.trace("Cargada la imagen de la banda");
 			}
 			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
-			logger.debug("-----------Empotrado el tipo de letra de la banda");
+			logger.trace("Empotrado el tipo de letra de la banda");
 		} catch (IOException e) {
 			logger.error("No se ha encontrado un recurso necesario", e);
 		}
@@ -145,7 +144,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NPAGE)) {
 
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NBANNERPAGE)) {
-				logger.debug("------------Ha llegado un bannerPage");
+				logger.debug("Ha llegado un bannerPage");
 				contents.close();
 				blankPage = new PDPage();
 				contents = createPage(band, blankPage);
