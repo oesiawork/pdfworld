@@ -10,9 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.sinjava.docx.DocPDFConverter;
-import es.sinjava.model.Band;
-import es.sinjava.model.Band.Position;
-import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.FieldContainer;
 
 public class WordBand {

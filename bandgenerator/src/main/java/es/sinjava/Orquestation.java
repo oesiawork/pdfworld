@@ -11,7 +11,6 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.sinjava.model.Band.Position;
 import es.sinjava.factory.DraftFactory;
 import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;

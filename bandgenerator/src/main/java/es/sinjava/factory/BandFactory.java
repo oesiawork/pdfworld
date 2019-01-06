@@ -23,7 +23,7 @@ public class BandFactory {
 
 		line = populateValues(bandTemplate.getLineTree(), fieldContainer);
 		template.put(Template.FOOTER, line);
-		
+
 		newBand.setTemplate(template);
 		return newBand;
 	}

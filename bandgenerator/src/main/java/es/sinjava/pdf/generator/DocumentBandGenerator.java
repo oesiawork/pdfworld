@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +35,13 @@ public class DocumentBandGenerator {
 		}
 	}
 
-	public static void addBand(File noband, File withBand, BandTemplate bandTemplate, FieldContainer fc) throws IOException {
+	public static void addBand(File noband, File withBand, BandTemplate bandTemplate, FieldContainer fc)
+			throws IOException {
 		BeaPDFBandAssembler beaPDFAssembler = new BeaPDFBandAssembler();
 		Band band = BandFactory.getBand(bandTemplate, fc);
 		PDDocument document = PDDocument.load(noband);
 		PDDocument returningFile = beaPDFAssembler.insertBand(document, band);
-		
+
 		returningFile.save(withBand);
 
 	}

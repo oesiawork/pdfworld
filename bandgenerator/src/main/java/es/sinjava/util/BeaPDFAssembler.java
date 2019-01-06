@@ -27,7 +27,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
-import es.sinjava.pdf.generator.BeaGeneratorDelegate;
 import es.sinjava.pdf.model.StoreContent;
 
 public class BeaPDFAssembler {
@@ -202,7 +201,7 @@ public class BeaPDFAssembler {
 
 		if (pdImage == null) {
 			pdImage = PDImageXObject.createFromFile(
-					BeaGeneratorDelegate.class.getClassLoader().getResource(textContent).getFile(), document);
+					BeaPDFAssembler.class.getClassLoader().getResource(textContent).getFile(), document);
 		}
 		contents.drawImage(pdImage, marginLeft * BAND_CORRECTION, HEIGHT - (2 * MARGIN_BASE + Y_SIZE_BANNER),
 				X_SIZE_BANNER, Y_SIZE_BANNER);
