@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.sinjava.model.Band.Position;
 import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
@@ -52,6 +53,8 @@ public class Orquestation {
 		File bandTemplateFile = new File(
 				GenerateMultipage.class.getClassLoader().getResource("bandTemplate.xml").getFile());
 		BandTemplate bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
+		
+//		bandTemplate.setPosition(Position.BOTTON);
 
 		// creamos el contenido de la banda
 

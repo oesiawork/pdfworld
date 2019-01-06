@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
@@ -37,10 +36,12 @@ public class BeaPDFAssembler {
 	private static final int DEFAULT_SIZE_FONT = 12;
 	private static final float WIDTH = PDRectangle.A4.getWidth();
 	private static final float HEIGHT = PDRectangle.A4.getHeight();
-	private static final float MARGIN_BASE = 50f;
+	private static final float FACTOR_REDUCED = 0.1f;
+	private static final float FACTOR_MARGIN = 0.08f;
+	private static final float MARGIN_BASE = WIDTH * FACTOR_MARGIN;
 	private static final float X_SIZE_BANNER = WIDTH - (MARGIN_BASE * 2);
 	private static final float Y_SIZE_BANNER = DEFAULT_SIZE_FONT * 5f;
-	private static final float FACTOR_REDUCED = 0.1f;
+
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFAssembler.class);
 	private PDDocument document = new PDDocument();
 	private PDImageXObject pdImageBand = null;
@@ -72,15 +73,15 @@ public class BeaPDFAssembler {
 		PDPage blankPage = new PDPage();
 		PDPageContentStream contents = createPage(band, blankPage);
 
-		// insertamos el contenido
-
 		containsBanner = storeContentList.get(0).getContentType().equals(StoreContent.ContentType.BANNER);
 
 		if (containsBanner) {
 			writeBanner(storeContentList.get(0).getTextContent(), contents);
 		}
-
 		contents.beginText();
+		// Lo posicionamos correctamente
+		resetPage(contents);
+
 		for (StoreContent sc : storeContentList) {
 			if (sc.getContentType().equals(StoreContent.ContentType.BODY)) {
 				writeBody(sc.getTextContent(), contents);
@@ -96,6 +97,7 @@ public class BeaPDFAssembler {
 				// Escribimos un párrafo vacio
 				writeBody("", contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NPAGE)) {
+
 				// // nos posicionamos sobre una nueva página
 				// contents = resetToNewPage(contents);
 				// // lo dejamos a punto para seguir escribiendo
@@ -103,11 +105,13 @@ public class BeaPDFAssembler {
 				// contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
 
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NBANNERPAGE)) {
-				// nos posicionamos sobre una nueva página
-				// contents = resetToNewPage(contents);
-				// writeBanner(sc.getTextContent(), contents);
-				// contents.beginText();
-				// contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER));
+				logger.debug("------------Ha llegado un bannerPage");
+				contents.close();
+				blankPage = new PDPage();
+				contents = createPage(band, blankPage);
+				writeBanner(sc.getTextContent(), contents);
+				contents.beginText();
+				resetPage(contents);
 			}
 
 		}
@@ -124,7 +128,7 @@ public class BeaPDFAssembler {
 		if (band.getPosition().equals(Band.Position.BOTTON)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
 			logger.debug("Banda de tamaño {}  por {}", WIDTH, HEIGHT * FACTOR_REDUCED);
-			marginLeft = 0f;
+			marginLeft = MARGIN_BASE * (1 - FACTOR_REDUCED);
 
 		} else {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
@@ -227,6 +231,13 @@ public class BeaPDFAssembler {
 		contents.newLineAtOffset(-horizontalTranslation, -12f);
 	}
 
+	private void resetPage(PDPageContentStream contents) throws IOException {
+		logger.trace("Begin reset");
+		lineStack = HEIGHT - (MARGIN_BASE + Y_SIZE_BANNER);
+		float position = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
+		contents.newLineAtOffset(marginLeft, position);
+	}
+
 	private void writeList(String textContent, PDPageContentStream contents) throws IOException {
 		logger.trace("Begin writeList");
 
@@ -241,8 +252,8 @@ public class BeaPDFAssembler {
 			contents.showText("-" + item);
 			contents.newLineAtOffset(0f, -12f);
 		}
-		contents.newLineAtOffset(-(MARGIN_BASE+ marginLeft), -6f);
-		
+		contents.newLineAtOffset(-(MARGIN_BASE + marginLeft), -6f);
+
 		logger.trace("End writeList");
 	}
 
@@ -284,20 +295,6 @@ public class BeaPDFAssembler {
 		contents.showText(stringWritter.toString());
 		contents.newLineAtOffset(-marginLeft, -12f);
 	}
-
-	// private PDPageContentStream resetToNewPage(PDPageContentStream contents)
-	// throws IOException {
-	// PDPage currentPage;
-	// contents.endText();
-	// contents.close();
-	// currentPage = new PDPage();
-	// documentOut.addPage(currentPage);
-	// logger.debug("Tengo estas páginas " + documentOut.getNumberOfPages());
-	// contents = new PDPageContentStream(documentOut, currentPage,
-	// AppendMode.APPEND, true, true);
-	//
-	// return contents;
-	// }
 
 	private float getLineStackAndIncrement(int sizeFont) {
 		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;

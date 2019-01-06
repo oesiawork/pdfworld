@@ -18,9 +18,7 @@ import org.apache.pdfbox.util.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.sinjava.model.Band;
 import es.sinjava.pdf.model.StoreContent;
-import es.sinjava.util.PDFAssembler;
 
 public class BeaGeneratorDelegate {
 

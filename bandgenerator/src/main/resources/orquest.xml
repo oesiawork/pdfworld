@@ -22,18 +22,6 @@
 		</textContent>
 	</storeContentList>
 	<storeContentList>
-		<contentType>BODY</contentType>
-		<textContent>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-			sed do eiusmod tempor by ${nombre} incididunt ut labore et dolore
-			magna aliqua. Utenim ad minim veniam, quis nostrud by ${nombre}
-			exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-			Duis aute irure dolor in by ${nombre} reprehenderit in voluptate
-			velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-			occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-			mollit anim id est laborum.
-		</textContent>
-	</storeContentList>
-	<storeContentList>
 		<contentType>LIST</contentType>
 		<textContent>Andrés$Beatriz$María Jesús</textContent>
 	</storeContentList>
@@ -48,7 +36,7 @@
 			culpa qui officia deserunt mollit anim id est laborum.
 		</textContent>
 	</storeContentList>
-	
+
 	<storeContentList>
 		<contentType>LIST</contentType>
 		<textContent>Jovencillo ${param} de nombre atrevido </textContent>
@@ -85,4 +73,47 @@
 		<contentType>LIST</contentType>
 		<textContent>Nombre ${param} parametrizado </textContent>
 	</storeContentList>
+
+	<storeContentList>
+		<contentType>NBANNERPAGE</contentType>
+		<textContent>banner.png</textContent>
+	</storeContentList>
+
+	<storeContentList>
+		<contentType>BODY</contentType>
+		<textContent> Rolling Stones Lorem ipsum dolor sit amet consectetur
+			adipiscing elit,
+			feugiat eleifend dictum pulvinar rhoncus praesent
+			viverra magnis,
+			auctor condimentum arcu pharetra tempus erat. Rutrum
+			fames interdum
+			dui lacus iaculis cum hendrerit, dis in euismod quam
+			enim arcu
+			habitasse viverra, ante pulvinar nec nam molestie varius.
+			Mauris
+			semper sodales curabitur erat maecenas porta aenean inceptos
+			convallis libero facilisi justo, accumsan ac laoreet mi luctus cum
+			tincidunt fames dis sem.
+			Class cursus venenatis ridiculus fusce
+			praesent tristique imperdiet,
+			turpis bibendum hendrerit ultricies quam
+			fringilla auctor, nostra
+			conubia velit donec aptent viverra. Taciti
+			inceptos vulputate
+			condimentum dis potenti cubilia, platea porttitor
+			nibh id elementum
+			nulla morbi, hendrerit orci curabitur et eleifend.
+			Porta turpis
+			convallis neque penatibus habitant nulla cum, potenti
+			egestas eu
+			rhoncus sodales tellus aenean natoque, ante dui nunc odio
+			platea
+			eleifend.
+		</textContent>
+	</storeContentList>
+	<storeContentList>
+		<contentType>LIST</contentType>
+		<textContent>Nombre ${param} parametrizado </textContent>
+	</storeContentList>
+
 </pdfTemplate>

@@ -11,8 +11,6 @@ import javax.xml.transform.TransformerException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDMetadata;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.color.PDOutputIntent;
 import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.schema.DublinCoreSchema;
@@ -22,7 +20,6 @@ import org.apache.xmpbox.xml.XmpSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.sinjava.model.Band;
 import es.sinjava.pdf.model.StoreContent;
 
 public class BeaGenerator extends BeaGeneratorDelegate {
