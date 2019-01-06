@@ -13,7 +13,7 @@ public class BandSelloOrgano {
 	public static FieldContainer build(String csv, String owner, String urlVerification, String date,
 			String organismName) {
 
-		logger.info("Begin BandaSelloOrgano");
+		logger.trace("Begin BandaSelloOrgano");
 
 		FieldContainer fcInput = new FieldContainer();
 		Map<String, String> valoresInput = new HashMap<>();
@@ -26,7 +26,7 @@ public class BandSelloOrgano {
 		}
 		fcInput.setContainer(valoresInput);
 
-		logger.info("Begin BandaSelloOrgano");
+		logger.trace("Begin BandaSelloOrgano");
 		return fcInput;
 	}
 

@@ -22,6 +22,7 @@ import org.apache.xmpbox.xml.XmpSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.sinjava.model.Band;
 import es.sinjava.pdf.model.StoreContent;
 
 public class BeaGenerator extends BeaGeneratorDelegate {
@@ -96,5 +97,7 @@ public class BeaGenerator extends BeaGeneratorDelegate {
 	public void setContentList(List<StoreContent> contentList) {
 		this.contentList = contentList;
 	}
+
+	
 
 }

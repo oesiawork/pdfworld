@@ -27,7 +27,7 @@ public class DraftFactory {
 			String seed = contentStore.getTextContent().replaceAll("\\p{C}", "");
 
 			if (seed.contains("${") && !contentStore.getContentType().equals(LIST)) {
-				logger.info(" Encontrada semilla");
+				logger.debug(" Encontrada semilla");
 				for (Entry<String, String> entry : fields.entrySet()) {
 					contentStore.setTextContent(seed.replace("${" + entry.getKey() + "}", entry.getValue()));
 				}

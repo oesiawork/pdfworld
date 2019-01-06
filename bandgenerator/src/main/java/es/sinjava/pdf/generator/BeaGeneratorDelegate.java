@@ -18,7 +18,9 @@ import org.apache.pdfbox.util.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.sinjava.model.Band;
 import es.sinjava.pdf.model.StoreContent;
+import es.sinjava.util.PDFAssembler;
 
 public class BeaGeneratorDelegate {
 
@@ -94,6 +96,7 @@ public class BeaGeneratorDelegate {
 
 	}
 
+
 	private PDPageContentStream resetToNewPage(PDPageContentStream contents) throws IOException {
 		PDPage currentPage;
 		contents.endText();
@@ -139,7 +142,7 @@ public class BeaGeneratorDelegate {
 
 	private void writeTitle(String textContent, PDPageContentStream contents) throws IOException {
 
-		logger.info("Begin writeTitle");
+		logger.trace("Begin writeTitle");
 
 		int fontSizeTitle = DEFAULT_SIZE_FONT + 2;
 
@@ -164,7 +167,7 @@ public class BeaGeneratorDelegate {
 	}
 
 	private void writeList(String textContent, PDPageContentStream contents) throws IOException {
-		logger.info("Begin writeList");
+		logger.trace("Begin writeList");
 
 		String[] items = textContent.split("\\$");
 
@@ -178,7 +181,7 @@ public class BeaGeneratorDelegate {
 			contents.newLineAtOffset(0f, -12f);
 		}
 		contents.newLineAtOffset(-MARGIN * 2, 12f);
-		logger.info("End writeList");
+		logger.trace("End writeList");
 	}
 
 	private void writeLeftContent(String textContent, PDPageContentStream contents) throws IOException {
@@ -189,7 +192,7 @@ public class BeaGeneratorDelegate {
 
 	private void writeBody(String textContent, PDPageContentStream contents) throws IOException {
 
-		logger.info(" Se escribe el body");
+		logger.trace(" Se escribe el body");
 
 		String[] words = textContent.split(" ");
 		StringWriter stringWritter = new StringWriter();
@@ -222,7 +225,7 @@ public class BeaGeneratorDelegate {
 
 	private float getLineStackAndIncrement(int sizeFont) {
 		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
-		logger.info("posición " + lineStackCurrent);
+		logger.trace("posición " + lineStackCurrent);
 		lineStack = lineStack - sizeFont;
 		return lineStackCurrent;
 	}

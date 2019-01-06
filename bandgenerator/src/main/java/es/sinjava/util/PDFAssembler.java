@@ -95,10 +95,46 @@ public class PDFAssembler {
 			contents.saveGraphicsState();
 			contents.close();
 		}
-
-//		
-
 		return documentOut;
+	}
+
+	public void pushBandPage(PDDocument document, Band band, PDFont font) throws IOException {
+
+		logger.info("Begin build");
+
+		// Metemos la imagen
+
+		if (pdImageBand == null) {
+			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
+			pdImageBand = PDImageXObject.createFromFile(
+					PDFAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
+		}
+
+		PDPage blankPage = new PDPage();
+		document.addPage(blankPage);
+		PDPageContentStream contents = new PDPageContentStream(document, blankPage);
+
+		if (band.getPosition().equals(Band.Position.BOTTON)) {
+			contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
+		} else {
+			contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
+		}
+
+		contents.restoreGraphicsState();
+
+		// Lo inicializamos como matrix horizontal
+		Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
+
+		if (band.getPosition().equals(Band.Position.LEFT)) {
+			matrixVertical = Matrix.getTranslateInstance(25f, 100f);
+			matrixVertical.rotate(Math.PI / 2);
+		}
+
+		insertQRCode(band, document, contents);
+
+		// metemos el texto
+		pushContent(band, contents, font, matrixVertical);
+
 	}
 
 	private void insertQRCode(Band band, PDDocument documentOut, PDPageContentStream contents) throws IOException {
