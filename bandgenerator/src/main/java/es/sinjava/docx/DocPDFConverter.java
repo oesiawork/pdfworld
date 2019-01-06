@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.sinjava.docx;
 
 import java.io.ByteArrayOutputStream;
@@ -14,8 +17,19 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import es.sinjava.model.FieldContainer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DocPDFConverter.
+ */
 public class DocPDFConverter {
 
+	/**
+	 * Gets the pdf.
+	 *
+	 * @param docInPut the doc in put
+	 * @return the pdf
+	 * @throws Exception the exception
+	 */
 	public static PDDocument getPDF(InputStream docInPut) throws Exception {
 
 		WordprocessingMLPackage procesor = WordprocessingMLPackage.load(docInPut);
@@ -35,6 +49,14 @@ public class DocPDFConverter {
 		return PDDocument.load(osStream.toByteArray());
 	}
 
+	/**
+	 * Gets the pdf.
+	 *
+	 * @param docInPut the doc in put
+	 * @param fc the fc
+	 * @return the pdf
+	 * @throws Exception the exception
+	 */
 	public static PDDocument getPDF(InputStream docInPut, FieldContainer fc) throws Exception {
 
 		WordprocessingMLPackage procesor = WordprocessingMLPackage.load(docInPut);

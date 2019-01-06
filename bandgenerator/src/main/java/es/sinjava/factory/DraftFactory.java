@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.sinjava.factory;
 
 import java.util.ArrayList;
@@ -14,10 +17,25 @@ import es.sinjava.pdf.model.PdfTemplate;
 import es.sinjava.pdf.model.StoreContent;
 import es.sinjava.pdf.model.StoreContent.ContentType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating Draft objects.
+ */
 public class DraftFactory {
+	
+	/** The Constant LIST. */
 	private static final ContentType LIST = StoreContent.ContentType.LIST;
+	
+	/** The Constant logger. */
 	private final static Logger logger = LoggerFactory.getLogger(DraftFactory.class);
 
+	/**
+	 * Gets the draft.
+	 *
+	 * @param pdfTemplate the pdf template
+	 * @param fc the fc
+	 * @return the draft
+	 */
 	public static PdfTemplate getDraft(PdfTemplate pdfTemplate, FieldContainer fc) {
 		logger.info("Begin getDraft");
 		Map<String, String> fields = fc.getContainer();

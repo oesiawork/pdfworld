@@ -1,54 +1,89 @@
+/*
+ * 
+ */
 package es.sinjava.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class Band.
+ */
 public class Band {
 
+	/** The Constant logger. */
 	private final static Logger logger = LoggerFactory.getLogger(Band.class);
+	
+	/** The position. */
 	private Position position;
+	
+	/** The template. */
 	private Template template;
+	
+	/** The qr code. */
 	private String qrCode;
 
+	/**
+	 * The Enum Position.
+	 */
 	public enum Position {
-		LEFT, BOTTON
+		
+		/** The left. */
+		LEFT, 
+ /** The botton. */
+ BOTTON
 	}
 
-	public static Band getDefaultBand() {
-		logger.debug("Begin getDefault");
-		Band band = new Band();
-		// valores por defecto
-		band.setPosition(Position.LEFT);
-		return band;
-	}
-
-	public static Band getBand(Template template) {
-		logger.debug("Begin getBand");
-		Band band = getDefaultBand();
-		band.setTemplate(template);
-		return band;
-	}
-
+	/**
+	 * Gets the template.
+	 *
+	 * @return the template
+	 */
 	public Template getTemplate() {
 		return template;
 	}
 
+	/**
+	 * Sets the template.
+	 *
+	 * @param template the new template
+	 */
 	public void setTemplate(Template template) {
 		this.template = template;
 	}
 
+	/**
+	 * Gets the position.
+	 *
+	 * @return the position
+	 */
 	public Position getPosition() {
 		return position;
 	}
 
+	/**
+	 * Sets the position.
+	 *
+	 * @param position the new position
+	 */
 	public void setPosition(Position position) {
 		this.position = position;
 	}
 
+	/**
+	 * Gets the qr code.
+	 *
+	 * @return the qr code
+	 */
 	public String getQrCode() {
 		return qrCode;
 	}
 
+	/**
+	 * Sets the qr code.
+	 *
+	 * @param qrCode the new qr code
+	 */
 	public void setQrCode(String qrCode) {
 		this.qrCode = qrCode;
 	}
