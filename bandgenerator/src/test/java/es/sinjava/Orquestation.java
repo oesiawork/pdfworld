@@ -11,7 +11,6 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.sinjava.factory.DraftFactory;
 import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
@@ -35,18 +34,9 @@ public class Orquestation {
 		FieldContainer fieldContainer = new FieldContainer();
 		Map<String, String> container = new HashMap<>();
 		container.put("nombre", "Andrés Gaudioso");
-		container.put("param", "Andrés$Beatriz$Tomás$Idoia");
+		container.put("param", "Andrés$Beatriz$Tomás$Carmen");
 		fieldContainer.setContainer(container);
-
-		// creamos la DraftDel Pdf
-		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
-
-		// no lo volcaremos a disco
-		File tempFile = File.createTempFile("Multi", ".pdf");
-		// BeaGenerator.getInstance().writePDFFile(pdfTemplate.getStoreContentList(),
-		// tempFile, requirePDFA);
-		logger.info("End main");
-
+		
 		// recuperamos la plantilla de la banda
 
 		File bandTemplateFile = new File(Orquestation.class.getClassLoader().getResource("bandTemplate.xml").getFile());
