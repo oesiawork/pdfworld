@@ -5,5 +5,5 @@ public class Paragraph extends StoreContent {
 	public Paragraph() {
 		super(ContentType.BODY);
 	}
-	
+
 }

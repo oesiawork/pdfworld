@@ -30,7 +30,7 @@ public class StoreContent {
 	}
 
 	public enum ContentType {
-		TITLE, BODY, LIST, LEFTCONTENT, BANNER
+		TITLE, BODY, LIST, LEFTCONTENT, BANNER, NPAGE, NLINE, NBANNERPAGE
 	}
 
 }

@@ -11,7 +11,8 @@ public class PdfTemplate {
 	public PdfTemplate() {
 		this.storeContentList = new ArrayList<>();
 	}
-	private List<StoreContent> storeContentList ;
+
+	private List<StoreContent> storeContentList;
 
 	public List<StoreContent> getStoreContentList() {
 		return storeContentList;
