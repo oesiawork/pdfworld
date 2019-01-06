@@ -52,12 +52,12 @@ public class Orquestation {
 
 		File orquestationFile = File.createTempFile("Orquest", ".pdf");
 
-		DocumentBandGenerator.buildAsTempFile(orquestationFile, pdfTemplate, fieldContainer, bandTemplate, fc);
+		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, bandTemplate, fc);
 
 		File noband = File.createTempFile("NoBand", ".pdf");
-		DocumentBandGenerator.buildAsTempFile(noband, pdfTemplate, fieldContainer, null, fc);
+		DocumentBandGenerator.buildAsFile(noband, pdfTemplate, fieldContainer, null, fc);
 
-		File withBand = File.createTempFile("NoBand", ".pdf");
+		File withBand = File.createTempFile("YaBand", ".pdf");
 		DocumentBandGenerator.addBand(noband, withBand, bandTemplate, fc);
 
 	}

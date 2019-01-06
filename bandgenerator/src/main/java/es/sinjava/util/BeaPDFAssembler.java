@@ -1,7 +1,6 @@
 package es.sinjava.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -65,7 +64,7 @@ public class BeaPDFAssembler {
 		}
 	}
 
-	public void write(List<StoreContent> storeContentList, Band band, File orquestationFile) throws IOException {
+	public PDDocument write(List<StoreContent> storeContentList, Band band) throws IOException {
 
 		// Si el documento tiene banda creamos la página con banda izda y modificamos el
 		// margen para empezar a escribir
@@ -97,12 +96,6 @@ public class BeaPDFAssembler {
 				writeBody("", contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NPAGE)) {
 
-				// // nos posicionamos sobre una nueva página
-				// contents = resetToNewPage(contents);
-				// // lo dejamos a punto para seguir escribiendo
-				// contents.beginText();
-				// contents.newLineAtOffset(0, HEIGHT - (2 * MARGIN));
-
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NBANNERPAGE)) {
 				logger.debug("------------Ha llegado un bannerPage");
 				contents.close();
@@ -117,7 +110,7 @@ public class BeaPDFAssembler {
 
 		contents.close();
 
-		document.save(orquestationFile);
+		return document;
 	}
 
 	private PDPageContentStream createPage(Band band, PDPage blankPage) throws IOException {
