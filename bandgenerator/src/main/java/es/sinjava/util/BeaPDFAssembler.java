@@ -235,13 +235,14 @@ public class BeaPDFAssembler {
 		int fontSize = DEFAULT_SIZE_FONT;
 		contents.setFont(font, fontSize);
 
-		contents.newLineAtOffset(MARGIN_BASE * 2, -12f);
+		contents.newLineAtOffset(MARGIN_BASE + marginLeft, -6f);
 
 		for (String item : items) {
 			contents.showText("-" + item);
 			contents.newLineAtOffset(0f, -12f);
 		}
-		contents.newLineAtOffset(-MARGIN_BASE * 2, 12f);
+		contents.newLineAtOffset(-(MARGIN_BASE+ marginLeft), -6f);
+		
 		logger.trace("End writeList");
 	}
 
@@ -262,7 +263,7 @@ public class BeaPDFAssembler {
 		contents.setFont(font, fontSize);
 
 		// recuperamos la posición
-		contents.newLineAtOffset(MARGIN_BASE, -12f);
+		contents.newLineAtOffset(marginLeft, -6f);
 
 		for (String word : words) {
 
@@ -281,7 +282,7 @@ public class BeaPDFAssembler {
 			}
 		}
 		contents.showText(stringWritter.toString());
-		contents.newLineAtOffset(-marginLeft, -1f);
+		contents.newLineAtOffset(-marginLeft, -12f);
 	}
 
 	// private PDPageContentStream resetToNewPage(PDPageContentStream contents)

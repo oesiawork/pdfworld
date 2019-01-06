@@ -220,7 +220,6 @@ public class BeaGeneratorDelegate {
 			}
 		}
 		contents.showText(stringWritter.toString());
-		contents.newLineAtOffset(-MARGIN, -1f);
 	}
 
 	private float getLineStackAndIncrement(int sizeFont) {
