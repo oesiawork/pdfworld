@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.sinjava.util;
 
 import java.io.ByteArrayOutputStream;
@@ -28,27 +31,61 @@ import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 import es.sinjava.pdf.model.StoreContent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BeaPDFAssembler.
+ */
 public class BeaPDFAssembler extends PDFAssembler {
 
+	/** The Constant BAND_CORRECTION. */
 	private static final float BAND_CORRECTION = 1.5f;
+	
+	/** The Constant DEFAULT_SIZE_FONT. */
 	private static final int DEFAULT_SIZE_FONT = 12;
+	
+	/** The Constant FACTOR_REDUCED. */
 	private static final float FACTOR_REDUCED = 0.1f;
+	
+	/** The Constant FACTOR_MARGIN. */
 	private static final float FACTOR_MARGIN = 0.08f;
+	
+	/** The Constant MARGIN_BASE. */
 	private static final float MARGIN_BASE = WIDTH * FACTOR_MARGIN;
+	
+	/** The Constant X_SIZE_BANNER. */
 	private static final float X_SIZE_BANNER = WIDTH - (MARGIN_BASE * 2);
+	
+	/** The Constant Y_SIZE_BANNER. */
 	private static final float Y_SIZE_BANNER = DEFAULT_SIZE_FONT * 5f;
+	
+	/** The Constant IMAGEBANDFILE. */
 	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png")
 			.getFile();
 
+	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFAssembler.class);
 
+	/** The pd image band. */
 	private static PDImageXObject pdImageBand = null;
+	
+	/** The pd image. */
 	private PDImageXObject pdImage;
+	
+	/** The margin left. */
 	private float marginLeft;
+	
+	/** The contains banner. */
 	private boolean containsBanner;
+	
+	/** The line stack. */
 	private float lineStack = HEIGHT - 10f * DEFAULT_SIZE_FONT;
+	
+	/** The font. */
 	private PDType0Font font;
 
+	/**
+	 * Instantiates a new bea PDF assembler.
+	 */
 	public BeaPDFAssembler() {
 		logger.info(" Constructor BeaPDFAssembler ");
 		logger.info("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
@@ -67,6 +104,14 @@ public class BeaPDFAssembler extends PDFAssembler {
 
 	}
 
+	/**
+	 * Write.
+	 *
+	 * @param storeContentList the store content list
+	 * @param band the band
+	 * @return the PD document
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public PDDocument write(List<StoreContent> storeContentList, Band band) throws IOException {
 
 		// Si el documento tiene banda creamos la página con banda izda y modificamos el
@@ -116,6 +161,14 @@ public class BeaPDFAssembler extends PDFAssembler {
 		return document;
 	}
 
+	/**
+	 * Creates the page.
+	 *
+	 * @param band the band
+	 * @param blankPage the blank page
+	 * @return the PD page content stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private PDPageContentStream createPage(Band band, PDPage blankPage) throws IOException {
 		document.addPage(blankPage);
 		PDPageContentStream contents = new PDPageContentStream(document, blankPage);
@@ -150,6 +203,15 @@ public class BeaPDFAssembler extends PDFAssembler {
 		return contents;
 	}
 
+	/**
+	 * Push content text.
+	 *
+	 * @param band the band
+	 * @param contents the contents
+	 * @param font the font
+	 * @param matrixText the matrix text
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void pushContentText(Band band, PDPageContentStream contents, PDFont font, Matrix matrixText)
 			throws IOException {
 		logger.debug("Begin pushContent");
@@ -170,6 +232,14 @@ public class BeaPDFAssembler extends PDFAssembler {
 		logger.debug("End pushContent");
 	}
 
+	/**
+	 * Insert QR code.
+	 *
+	 * @param band the band
+	 * @param documentOut the document out
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void insertQRCode(Band band, PDDocument documentOut, PDPageContentStream contents) throws IOException {
 
 		logger.debug("Begin insertQRCode");
@@ -193,6 +263,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 		}
 	}
 
+	/**
+	 * Write banner.
+	 *
+	 * @param textContent the text content
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeBanner(String textContent, PDPageContentStream contents) throws IOException {
 
 		if (pdImage == null) {
@@ -204,6 +281,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.restoreGraphicsState();
 	}
 
+	/**
+	 * Write title.
+	 *
+	 * @param textContent the text content
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeTitle(String textContent, PDPageContentStream contents) throws IOException {
 
 		logger.trace("Begin writeTitle");
@@ -230,6 +314,12 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(-horizontalTranslation, -12f);
 	}
 
+	/**
+	 * Reset page.
+	 *
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void resetPage(PDPageContentStream contents) throws IOException {
 		logger.trace("Begin reset");
 		lineStack = HEIGHT - (MARGIN_BASE + Y_SIZE_BANNER);
@@ -237,6 +327,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(marginLeft, position);
 	}
 
+	/**
+	 * Write list.
+	 *
+	 * @param textContent the text content
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeList(String textContent, PDPageContentStream contents) throws IOException {
 		logger.trace("Begin writeList");
 
@@ -256,12 +353,26 @@ public class BeaPDFAssembler extends PDFAssembler {
 		logger.trace("End writeList");
 	}
 
+	/**
+	 * Write left content.
+	 *
+	 * @param textContent the text content
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeLeftContent(String textContent, PDPageContentStream contents) throws IOException {
 		// TODO Auto-generated method stub
 		writeTitle(textContent, contents);
 
 	}
 
+	/**
+	 * Write body.
+	 *
+	 * @param textContent the text content
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeBody(String textContent, PDPageContentStream contents) throws IOException {
 
 		logger.trace(" Se escribe el body");
@@ -295,6 +406,12 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(-marginLeft, -12f);
 	}
 
+	/**
+	 * Gets the line stack and increment.
+	 *
+	 * @param sizeFont the size font
+	 * @return the line stack and increment
+	 */
 	private float getLineStackAndIncrement(int sizeFont) {
 		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
 		logger.trace("posición " + lineStackCurrent);

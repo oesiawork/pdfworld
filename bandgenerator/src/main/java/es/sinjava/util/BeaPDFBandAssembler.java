@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.sinjava.util;
 
 import java.io.ByteArrayOutputStream;
@@ -26,15 +29,34 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BeaPDFBandAssembler.
+ */
 public class BeaPDFBandAssembler extends PDFAssembler {
 
+	/** The Constant FACTOR_REDUCED. */
 	private static final float FACTOR_REDUCED = 0.1f;
+	
+	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFBandAssembler.class);
+	
+	/** The pd image band. */
 	private PDImageXObject pdImageBand;
+	
+	/** The font. */
 	private PDType0Font font;
 
 	// Precargamos los valores
 
+	/**
+	 * Insert band.
+	 *
+	 * @param documentIn the document in
+	 * @param band the band
+	 * @return the PD document
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public PDDocument insertBand(PDDocument documentIn, Band band) throws IOException {
 
 		logger.info("Begin build");
@@ -90,6 +112,14 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		return document;
 	}
 
+	/**
+	 * Push band page.
+	 *
+	 * @param document the document
+	 * @param band the band
+	 * @param font the font
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void pushBandPage(PDDocument document, Band band, PDFont font) throws IOException {
 
 		logger.info("Begin build");
@@ -129,6 +159,14 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 
 	}
 
+	/**
+	 * Insert QR code.
+	 *
+	 * @param band the band
+	 * @param documentOut the document out
+	 * @param contents the contents
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void insertQRCode(Band band, PDDocument documentOut, PDPageContentStream contents) throws IOException {
 		if (StringUtils.isNotBlank(band.getQrCode())) {
 			// Insertamos el código qr
@@ -149,6 +187,15 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		}
 	}
 
+	/**
+	 * Push content.
+	 *
+	 * @param band the band
+	 * @param contents the contents
+	 * @param font the font
+	 * @param matrixVertical the matrix vertical
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void pushContent(Band band, PDPageContentStream contents, PDFont font, Matrix matrixVertical)
 			throws IOException {
 		logger.debug("Begin pushContent");

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.sinjava.pdf.generator;
 
 import java.io.ByteArrayOutputStream;
@@ -27,10 +30,25 @@ import es.sinjava.pdf.model.PdfTemplate;
 import es.sinjava.util.BeaPDFAssembler;
 import es.sinjava.util.BeaPDFBandAssembler;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DocumentBandGenerator.
+ */
 public class DocumentBandGenerator {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DocumentBandGenerator.class);
 
+	/**
+	 * Builds the as file.
+	 *
+	 * @param orquestationFile the orquestation file
+	 * @param pdfTemplate the pdf template
+	 * @param fieldContainer the field container
+	 * @param bandTemplate the band template
+	 * @param fc the fc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void buildAsFile(File orquestationFile, PdfTemplate pdfTemplate, FieldContainer fieldContainer,
 			BandTemplate bandTemplate, FieldContainer fc) throws IOException {
 
@@ -77,6 +95,16 @@ public class DocumentBandGenerator {
 		pdDocument.save(orquestationFile);
 	}
 	
+	/**
+	 * Builds the as byte array.
+	 *
+	 * @param pdfTemplate the pdf template
+	 * @param fieldContainer the field container
+	 * @param bandTemplate the band template
+	 * @param fc the fc
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static byte[] buildAsByteArray( PdfTemplate pdfTemplate, FieldContainer fieldContainer,
 			BandTemplate bandTemplate, FieldContainer fc) throws IOException {
 
@@ -124,6 +152,15 @@ public class DocumentBandGenerator {
 		return baos.toByteArray();
 	}
 	
+	/**
+	 * Adds the band.
+	 *
+	 * @param noband the noband
+	 * @param withBand the with band
+	 * @param bandTemplate the band template
+	 * @param fc the fc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void addBand(byte[] noband, File withBand, BandTemplate bandTemplate, FieldContainer fc)
 			throws IOException {
 		BeaPDFBandAssembler beaPDFAssembler = new BeaPDFBandAssembler();
@@ -133,6 +170,15 @@ public class DocumentBandGenerator {
 		returningFile.save(withBand);
 	}
 	
+	/**
+	 * Adds the band.
+	 *
+	 * @param noband the noband
+	 * @param withBand the with band
+	 * @param bandTemplate the band template
+	 * @param fc the fc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void addBand(File noband, File withBand, BandTemplate bandTemplate, FieldContainer fc)
 			throws IOException {
 		BeaPDFBandAssembler beaPDFAssembler = new BeaPDFBandAssembler();
