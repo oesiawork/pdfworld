@@ -99,7 +99,7 @@ public class BeaGeneratorDelegate {
 		PDImageXObject pdImage = PDImageXObject.createFromFile(
 				BeaGeneratorDelegate.class.getClassLoader().getResource(textContent).getFile(), documentOut);
 		contents.drawImage(pdImage, MARGIN, HEIGHT - (2 * MARGIN + Y_SIZE_BANNER), X_SIZE_BANNER, Y_SIZE_BANNER);
-		contents.restoreGraphicsState();
+//		contents.restoreGraphicsState();
 
 	}
 
