@@ -25,7 +25,7 @@ public class DocPDFConverterTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void testGetPDFInputStream() throws Exception {
 		InputStream docInPut = new FileInputStream(
 				DocPDFConverterTest.class.getClassLoader().getResource("libros.docx").getFile());
@@ -41,7 +41,7 @@ public class DocPDFConverterTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void testGetPDFInputStreamFieldContainer() throws Exception {
 		InputStream docInPut = DocPDFConverterTest.class.getClassLoader().getResourceAsStream("libros.docx");
 		PDDocument documentoBase = DocPDFConverter.getPDF(docInPut);

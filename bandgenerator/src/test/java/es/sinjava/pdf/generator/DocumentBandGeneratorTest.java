@@ -34,8 +34,7 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testBuildAsFile() throws IOException {
 		logger.debug("Begin testBuildAsFile");
-		File orquestationFile = File.createTempFile("Test", ".pdf");
-		orquestationFile.deleteOnExit();
+		File orquestationFile = File.createTempFile("testBuildAsFile", ".pdf");
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, bandTemplate, fcBanda);
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");
@@ -44,8 +43,8 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testBuildAsFileWithoutBand() throws IOException {
 		logger.debug("Begin testBuildAsFile");
-		File orquestationFile = File.createTempFile("Test", ".pdf");
-		orquestationFile.deleteOnExit();
+		File orquestationFile = File.createTempFile("testBuildAsFileWithoutBand", ".pdf");
+//		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, null, null);
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");
@@ -70,7 +69,7 @@ public class DocumentBandGeneratorTest {
 
 	@Test
 	public void testAddBandByteArrayFileBandTemplateFieldContainer() throws IOException {
-		File orquestationFile = File.createTempFile("Test", ".pdf");
+		File orquestationFile = File.createTempFile("testAddBandByteArrayFileBandTemplateFieldContainer", ".pdf");
 		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.addBand(senuelo, orquestationFile, bandTemplate, fcBanda);
 		Assert.assertTrue(orquestationFile.canRead());
@@ -111,7 +110,6 @@ public class DocumentBandGeneratorTest {
 				"Colegio Profesional de Ingenieros Técnicos en Informática de Aragón");
 		senuelo = File.createTempFile("senuelo", ".pdf");
 		DocumentBandGenerator.buildAsFile(senuelo, pdfTemplate, fieldContainer, null, null);
-		;
 
 		senueloByte = DocumentBandGenerator.buildAsByteArray(pdfTemplate, fieldContainer, null, null);
 	}

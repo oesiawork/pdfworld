@@ -87,7 +87,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 */
 	public BeaPDFAssembler() {
 		logger.info(" Constructor BeaPDFAssembler ");
-		logger.info("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
+		logger.trace("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
 
 		try {
 			if (pdImageBand == null) {
@@ -174,12 +174,12 @@ public class BeaPDFAssembler extends PDFAssembler {
 
 		if (band != null && band.getPosition().equals(Band.Position.BOTTON)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
-			logger.debug("Banda de tamaño {}  por {}", WIDTH, HEIGHT * FACTOR_REDUCED);
+			logger.trace("Banda de tamaño {}  por {}", WIDTH, HEIGHT * FACTOR_REDUCED);
 			marginLeft = MARGIN_BASE * (1 - FACTOR_REDUCED);
 
 		} else if (band != null && band.getPosition().equals(Band.Position.LEFT)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
-			logger.debug("Banda de tamaño {}  por {}", WIDTH * FACTOR_REDUCED, HEIGHT);
+			logger.trace("Banda de tamaño {}  por {}", WIDTH * FACTOR_REDUCED, HEIGHT);
 			marginLeft = WIDTH * FACTOR_REDUCED;
 		} else {
 			marginLeft = MARGIN_BASE;
