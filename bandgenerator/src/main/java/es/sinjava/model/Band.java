@@ -8,7 +8,6 @@ package es.sinjava.model;
  */
 public class Band {
 
-	
 	/** The position. */
 	private Position position;
 	
