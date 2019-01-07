@@ -17,23 +17,25 @@ import es.sinjava.pdf.model.PdfTemplate;
 import es.sinjava.pdf.model.StoreContent;
 import es.sinjava.pdf.model.StoreContent.ContentType;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating Draft objects.
  */
 public class DraftFactory {
-	
+
+	private DraftFactory() {
+	}
+
 	/** The Constant LIST. */
 	private static final ContentType LIST = StoreContent.ContentType.LIST;
-	
+
 	/** The Constant logger. */
-	private final static Logger logger = LoggerFactory.getLogger(DraftFactory.class);
+	private static final  Logger logger = LoggerFactory.getLogger(DraftFactory.class);
 
 	/**
 	 * Gets the draft.
 	 *
 	 * @param pdfTemplate the pdf template
-	 * @param fc the fc
+	 * @param fc          the fc
 	 * @return the draft
 	 */
 	public static PdfTemplate getDraft(PdfTemplate pdfTemplate, FieldContainer fc) {
@@ -52,8 +54,8 @@ public class DraftFactory {
 			} else if (seed.contains("${") && contentStore.getContentType().equals(LIST)) {
 				// es un caso de interación sobre los objetos
 				List<String> inputList = new ArrayList<>();
-				String fieldName = seed.substring(seed.indexOf("${") + 2, seed.indexOf("}"));
-				logger.info("Capturando las semilla " + fieldName);
+				String fieldName = seed.substring(seed.indexOf("${") + 2, seed.indexOf('}'));
+				logger.info("Capturando las semilla {}" , fieldName);
 
 				for (String input : fields.get(fieldName).split("\\$")) {
 					inputList.add(seed.replace("${" + fieldName + "}", input));

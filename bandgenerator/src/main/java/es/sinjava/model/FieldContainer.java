@@ -3,14 +3,16 @@
  */
 package es.sinjava.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class FieldContainer.
  */
-public class FieldContainer {
+public class FieldContainer implements Serializable {
 
+
+	private static final long serialVersionUID = 1L;
 	/** The container. */
 	private Map<String, String> container;
 

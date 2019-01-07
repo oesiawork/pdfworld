@@ -36,6 +36,7 @@ public class DocumentBandGeneratorTest {
 		logger.debug("Begin testBuildAsFile");
 		File orquestationFile = File.createTempFile("testBuildAsFile", ".pdf");
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, bandTemplate, fcBanda);
+		orquestationFile.deleteOnExit();
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");
 	}
@@ -44,7 +45,7 @@ public class DocumentBandGeneratorTest {
 	public void testBuildAsFileWithoutBand() throws IOException {
 		logger.debug("Begin testBuildAsFile");
 		File orquestationFile = File.createTempFile("testBuildAsFileWithoutBand", ".pdf");
-//		orquestationFile.deleteOnExit();
+		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, null, null);
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");

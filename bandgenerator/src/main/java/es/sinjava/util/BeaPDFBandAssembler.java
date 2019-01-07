@@ -29,7 +29,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BeaPDFBandAssembler.
  */
@@ -47,7 +46,13 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	/** The font. */
 	private PDType0Font font;
 
-	// Precargamos los valores
+	public PDType0Font getFont() {
+		return font;
+	}
+
+	public void setFont(PDType0Font font) {
+		this.font = font;
+	}
 
 	/**
 	 * Insert band.

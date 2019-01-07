@@ -15,14 +15,17 @@ import org.slf4j.LoggerFactory;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.pdf.model.PdfTemplate;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TemplateProvider.
  */
 public class TemplateProvider {
 
+	private TemplateProvider() {
+
+	}
+
 	/** The Constant logger. */
-	private final static Logger logger = LoggerFactory.getLogger(TemplateProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(TemplateProvider.class);
 
 	/**
 	 * Retrieve pdf template.
@@ -36,6 +39,7 @@ public class TemplateProvider {
 		JAXBContext context = JAXBContext.newInstance(PdfTemplate.class);
 		Unmarshaller unMarshaller = context.createUnmarshaller();
 		PdfTemplate pdfTemplate = (PdfTemplate) unMarshaller.unmarshal(fileTemplate);
+		logger.trace("End retrievePdfTemplate");
 		return pdfTemplate;
 	}
 
@@ -51,6 +55,7 @@ public class TemplateProvider {
 		JAXBContext context = JAXBContext.newInstance(BandTemplate.class);
 		Unmarshaller unMarshaller = context.createUnmarshaller();
 		BandTemplate bandTemplate = (BandTemplate) unMarshaller.unmarshal(fileTemplate);
+		logger.trace("End retrieveBandTemplate");
 		return bandTemplate;
 	}
 
