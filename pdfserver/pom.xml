@@ -58,6 +58,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>es.sinjava</groupId>
+			<artifactId>bandgenerator</artifactId>
+			<version>1.0.0-RC</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
