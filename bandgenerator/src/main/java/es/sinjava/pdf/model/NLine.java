@@ -3,7 +3,6 @@
  */
 package es.sinjava.pdf.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NLine.
  */
@@ -16,9 +15,7 @@ public class NLine extends StoreContent {
 		super(ContentType.NLINE);
 	}
 
-	/* (non-Javadoc)
-	 * @see es.sinjava.pdf.model.StoreContent#setTextContent(java.lang.String)
-	 */
+	@Override
 	public void setTextContent(String textContent) {
 		super.setTextContent(" ");
 	}

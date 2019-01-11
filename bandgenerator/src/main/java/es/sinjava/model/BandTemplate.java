@@ -5,7 +5,6 @@ package es.sinjava.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BandTemplate.
  */

@@ -3,7 +3,6 @@
  */
 package es.sinjava.pdf.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NBannerPage.
  */

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ListContent.
  */

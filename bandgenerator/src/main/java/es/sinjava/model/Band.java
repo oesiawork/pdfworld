@@ -3,17 +3,11 @@
  */
 package es.sinjava.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * The Class Band.
  */
 public class Band {
 
-	/** The Constant logger. */
-	private final static Logger logger = LoggerFactory.getLogger(Band.class);
-	
 	/** The position. */
 	private Position position;
 	

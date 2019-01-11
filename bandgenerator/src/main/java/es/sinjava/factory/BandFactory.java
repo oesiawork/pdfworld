@@ -10,16 +10,18 @@ import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
 import es.sinjava.model.Template;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating Band objects.
  */
 public class BandFactory {
 
+	private BandFactory() {
+	}
+
 	/**
 	 * Gets the band.
 	 *
-	 * @param bandTemplate the band template
+	 * @param bandTemplate   the band template
 	 * @param fieldContainer the field container
 	 * @return the band
 	 */
@@ -50,7 +52,7 @@ public class BandFactory {
 	/**
 	 * Populate values.
 	 *
-	 * @param line the line
+	 * @param line           the line
 	 * @param fieldContainer the field container
 	 * @return the string
 	 */

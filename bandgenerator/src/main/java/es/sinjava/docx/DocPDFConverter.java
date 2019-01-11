@@ -23,6 +23,13 @@ import es.sinjava.model.FieldContainer;
 public class DocPDFConverter {
 
 	/**
+	 * Metodo privado de una clase de utilidad
+	 */
+	private DocPDFConverter() {
+
+	}
+
+	/**
 	 * Gets the pdf.
 	 *
 	 * @param docInPut the doc in put
@@ -37,9 +44,6 @@ public class DocPDFConverter {
 
 		procesor.setFontMapper(fontMapper);
 
-		// PhysicalFonts.setRegex(null);
-		// PhysicalFont font = PhysicalFonts.get("Arial Unicode MS");
-
 		FOSettings foSettings = Docx4J.createFOSettings();
 		foSettings.setWmlPackage(procesor);
 
@@ -52,7 +56,7 @@ public class DocPDFConverter {
 	 * Gets the pdf.
 	 *
 	 * @param docInPut the doc in put
-	 * @param fc the fc
+	 * @param fc       the fc
 	 * @return the pdf
 	 * @throws Exception the exception
 	 */

@@ -3,32 +3,32 @@
  */
 package es.sinjava.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Template.
  */
-public class Template extends HashMap<String, String> {
+public class Template extends HashMap<String, String> implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The template name. */
 	private String templateName;
-	
+
 	/** The field container. */
 	private FieldContainer fieldContainer;
 
 	/** The Constant BODY. */
 	public static final String BODY = "body";
-	
+
 	/** The Constant HEADER. */
 	public static final String HEADER = "header";
-	
+
 	/** The Constant FOOTER. */
 	public static final String FOOTER = "footer";
-	
+
 	/** The Constant QR. */
 	public static final String QR = "qr";
 
@@ -78,6 +78,16 @@ public class Template extends HashMap<String, String> {
 	 */
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
+	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		return super.equals(arg0);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

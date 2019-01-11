@@ -6,7 +6,6 @@ package es.sinjava.util;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PDFAssembler.
  */
