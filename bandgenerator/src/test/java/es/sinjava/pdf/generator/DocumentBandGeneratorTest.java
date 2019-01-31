@@ -2,9 +2,11 @@ package es.sinjava.pdf.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.pdfbox.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.sinjava.model.Band.Position;
 import es.sinjava.model.BandSelloOrgano;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
@@ -83,6 +86,31 @@ public class DocumentBandGeneratorTest {
 		DocumentBandGenerator.addBand(senueloByte, orquestationFile, bandTemplate, fcBanda);
 		Assert.assertTrue(orquestationFile.canRead());
 	}
+	
+	@Test
+	public void testAddBandHorizontalFile() throws IOException {
+		File orquestationFile = File.createTempFile("Horizontal", ".pdf");
+//		orquestationFile.deleteOnExit();
+		InputStream in = DocumentBandGeneratorTest.class.getClassLoader().getResourceAsStream("Horizontal.pdf");
+		byte[] horizontal = IOUtils.toByteArray(in );
+		DocumentBandGenerator.addBand(horizontal, orquestationFile, bandTemplate, fcBanda);
+		Assert.assertTrue(orquestationFile.canRead());
+	}
+	
+	@Test
+	public void testAddBanHorizontalInHorizontalFile() throws IOException {
+		File orquestationFile = File.createTempFile("Horizontal", ".pdf");
+//		orquestationFile.deleteOnExit();
+		InputStream in = DocumentBandGeneratorTest.class.getClassLoader().getResourceAsStream("Horizontal.pdf");
+		byte[] horizontal = IOUtils.toByteArray(in );
+		bandTemplate.setPosition(Position.BOTTON);
+		DocumentBandGenerator.addBand(horizontal, orquestationFile, bandTemplate, fcBanda);
+		bandTemplate.setPosition(Position.LEFT);
+		Assert.assertTrue(orquestationFile.canRead());
+	}
+	
+	
+	
 
 	@Before
 	public void setUp() throws Exception {

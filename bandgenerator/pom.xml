@@ -65,17 +65,8 @@
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>xmpbox</artifactId>
 			<version>2.0.12</version>
-			<!-- <packaging>bundle</packaging> -->
-		</dependency>
-
-		<dependency>
-			<groupId>es.sinjava</groupId>
-			<artifactId>bandgenerator</artifactId>
-			<version>1.0.0-RC</version>
 		</dependency>
 	</dependencies>
-
-
 
 	<build>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 

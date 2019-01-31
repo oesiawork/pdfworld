@@ -34,15 +34,17 @@ import es.sinjava.model.Template;
  */
 public class BeaPDFBandAssembler extends PDFAssembler {
 
+	private static final float FACTOR_A4_SHAPE = 0.7F;
+
 	/** The Constant FACTOR_REDUCED. */
 	private static final float FACTOR_REDUCED = 0.1f;
-	
+
 	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(BeaPDFBandAssembler.class);
-	
+
 	/** The pd image band. */
 	private PDImageXObject pdImageBand;
-	
+
 	/** The font. */
 	private PDType0Font font;
 
@@ -58,7 +60,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	 * Insert band.
 	 *
 	 * @param documentIn the document in
-	 * @param band the band
+	 * @param band       the band
 	 * @return the PD document
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -84,7 +86,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			PDPageContentStream contents = new PDPageContentStream(document, blankPage);
 
 			if (band.getPosition().equals(Band.Position.BOTTON)) {
-				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
+				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED * FACTOR_A4_SHAPE);
 			} else {
 				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 			}
@@ -104,11 +106,27 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			// metemos el texto
 			pushContent(band, contents, font, matrixVertical);
 
+			// Control si es horizontal la página
+			PDPage inProgress = documentIn.getPage(currentPage);
+
+			logger.debug("Dimensiones altura  " + inProgress.getBBox().getHeight());
+			logger.debug("Dimensiones anchura " + inProgress.getBBox().getWidth());
+
 			LayerUtility layerUtility = new LayerUtility(document);
 			Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
 			matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
+
+			if (inProgress.getBBox().getWidth() > inProgress.getBBox().getHeight()) {
+				// Nos lo llevamos al fondo de la página rotado
+				Matrix matrixHorizontal = Matrix.getRotateInstance(Math.PI / 2, WIDTH, -HEIGHT * 0.05f);
+
+				matrix.concatenate(matrixHorizontal);
+			}
+
 			contents.transform(matrix);
+
 			PDFormXObject form = layerUtility.importPageAsForm(documentIn, currentPage);
+
 			contents.drawForm(form);
 			contents.restoreGraphicsState();
 			contents.saveGraphicsState();
@@ -121,8 +139,8 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	 * Push band page.
 	 *
 	 * @param document the document
-	 * @param band the band
-	 * @param font the font
+	 * @param band     the band
+	 * @param font     the font
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void pushBandPage(PDDocument document, Band band, PDFont font) throws IOException {
@@ -167,9 +185,9 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	/**
 	 * Insert QR code.
 	 *
-	 * @param band the band
+	 * @param band        the band
 	 * @param documentOut the document out
-	 * @param contents the contents
+	 * @param contents    the contents
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void insertQRCode(Band band, PDDocument documentOut, PDPageContentStream contents) throws IOException {
@@ -195,9 +213,9 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	/**
 	 * Push content.
 	 *
-	 * @param band the band
-	 * @param contents the contents
-	 * @param font the font
+	 * @param band           the band
+	 * @param contents       the contents
+	 * @param font           the font
 	 * @param matrixVertical the matrix vertical
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
