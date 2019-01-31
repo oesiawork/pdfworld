@@ -34,6 +34,8 @@ import es.sinjava.model.Template;
  */
 public class BeaPDFBandAssembler extends PDFAssembler {
 
+	private static final float FACTOR_A4_SHAPE = 0.7F;
+
 	/** The Constant FACTOR_REDUCED. */
 	private static final float FACTOR_REDUCED = 0.1f;
 
@@ -84,7 +86,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			PDPageContentStream contents = new PDPageContentStream(document, blankPage);
 
 			if (band.getPosition().equals(Band.Position.BOTTON)) {
-				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED);
+				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED * FACTOR_A4_SHAPE);
 			} else {
 				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 			}
