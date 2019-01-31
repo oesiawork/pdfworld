@@ -38,6 +38,6 @@
 	</storeContentList>
 	<storeContentList>
 		<contentType>LIST</contentType>
-		<textContent>Jovencillo ${param} de nombre atrevido </textContent>
+		<textContent>Jovencillo ${param} de nombre atrevido coo</textContent>
 	</storeContentList>
 </pdfTemplate>
