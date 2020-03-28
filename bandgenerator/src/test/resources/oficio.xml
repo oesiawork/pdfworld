@@ -2,7 +2,7 @@
 <pdfTemplate>
 	<storeContentList>
 		<contentType>BANNER</contentType>
-		<textContent>banner.png</textContent>
+		<textContent>logodga.jpg</textContent>
 	</storeContentList>
 	<storeContentList>
 		<contentType>TITLE</contentType>
@@ -11,28 +11,7 @@
 	</storeContentList>
 	<storeContentList>
 		<contentType>BODY</contentType>
-		<textContent>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-			sed do eiusmod tempor by ${nombre} incididunt ut labore et dolore
-			magna aliqua. Utenim ad minim veniam, quis nostrud by ${nombre} 
-			exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-			Duis aute irure dolor in by ${nombre} reprehenderit in voluptate
-			velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-			occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-			mollit anim id est laborum.</textContent>
-	</storeContentList>
-	<storeContentList>
-		<contentType>LIST</contentType>
-		<textContent>Andrés$Beatriz$María Jesús</textContent>
-	</storeContentList>
-	<storeContentList>
-		<contentType>BODY</contentType>
-		<textContent>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-			sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-			Utenim ad minim veniam, quis nostrud exercitation ullamco laboris
-			nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-			reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-			pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-			culpa qui officia deserunt mollit anim id est laborum.</textContent>
+		<textContent>Petición al Servicio de Registro Telemático de la solicitud con los siguientes documentos adjuntos.</textContent>
 	</storeContentList>
 	<storeContentList>
 		<contentType>LIST</contentType>

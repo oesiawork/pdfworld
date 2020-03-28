@@ -2,11 +2,14 @@ package es.sinjava.pdf.custom;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -40,7 +43,13 @@ public class CustomTemplatesTest {
 		Map<String, String> container = new HashMap<>();
 		container.put("csvDocument", "CSV8976450048556BENT");
 		container.put("nombre", "Andrés Gaudioso");
-		container.put("param", "Andrés$Beatriz$Tomás$Carmen");
+		List<String> inputs= new ArrayList<>();
+		inputs.add("Expediente -CSV: CSV7W1573D14L130BENT");
+		inputs.add("Registro -CSV: CSV7W1573D14L130SRT");
+		inputs.add("Documentación Justificativa -CSV: CSV7W1573D14L130PFI");
+		inputs.add("Documentación Justificativa -CSV: CSV7W1573D14L130TTO");
+
+		container.put("param", StringUtils.join(inputs, "$" ));
 		fieldContainer.setContainer(container);
 
 		// Paso 3
@@ -60,8 +69,7 @@ public class CustomTemplatesTest {
 		Assert.assertTrue(oficioRemision.canRead());
 		logger.debug("End testBuildAsFile");
 	}
-	
-	
+
 	@Test
 	public void testOficio() throws IOException, JAXBException {
 		logger.debug("Begin testBuildAsFile");
@@ -87,7 +95,5 @@ public class CustomTemplatesTest {
 		Assert.assertTrue(oficioRemision.canRead());
 		logger.debug("End testBuildAsFile");
 	}
-	
-	
 
 }

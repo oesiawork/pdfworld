@@ -57,7 +57,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 	private static final float Y_SIZE_BANNER = DEFAULT_SIZE_FONT * 5f;
 
 	/** The Constant IMAGEBANDFILE. */
-	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png")
+	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("banda.jpg")
 			.getFile();
 
 	/** The logger. */
