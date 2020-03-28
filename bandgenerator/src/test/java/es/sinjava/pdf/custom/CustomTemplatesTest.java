@@ -82,7 +82,6 @@ public class CustomTemplatesTest {
 		fieldContainer.setContainer(container);
 
 		DocumentBandGenerator.buildAsFile(oficioRemision, pdfTemplate, fieldContainer, null, null);
-
 //		oficioRemision.deleteOnExit();
 		Assert.assertTrue(oficioRemision.canRead());
 		logger.debug("End testBuildAsFile");

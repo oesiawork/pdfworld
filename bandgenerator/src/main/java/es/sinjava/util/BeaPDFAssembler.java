@@ -72,9 +72,6 @@ public class BeaPDFAssembler extends PDFAssembler {
 	/** The margin left. */
 	private float marginLeft;
 
-	/** The contains banner. */
-	private boolean containsBanner;
-
 	/** The line stack. */
 	private float lineStack = HEIGHT - 10f * DEFAULT_SIZE_FONT;
 
@@ -91,7 +88,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 		try {
 
 			pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
-			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent() );
+			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent());
 
 			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
@@ -117,26 +114,18 @@ public class BeaPDFAssembler extends PDFAssembler {
 		PDPage blankPage = new PDPage();
 		PDPageContentStream contents = createPage(band, blankPage);
 
-		containsBanner = storeContentList.get(0).getContentType().equals(StoreContent.ContentType.BANNER);
+		boolean containsBanner = storeContentList.get(0).getContentType().equals(StoreContent.ContentType.BANNER);
 
-		if (containsBanner) {
-			writeBanner(storeContentList.get(0).getTextContent(), contents);
-		}
 		contents.beginText();
-		// Lo posicionamos correctamente
-		resetPage(contents);
-
+		float currentPosition = resetPageAt(contents, containsBanner);
+		logger.debug("Escibiendo en position {}", currentPosition);
 		for (StoreContent sc : storeContentList) {
 			if (sc.getContentType().equals(StoreContent.ContentType.BODY)) {
 				writeBody(sc.getTextContent(), contents);
-			} else if (sc.getContentType().equals(StoreContent.ContentType.LEFTCONTENT)) {
-				writeLeftContent(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.LIST)) {
 				writeList(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.TITLE)) {
-				writeTitle(sc.getTextContent(), contents);
-			} else if (sc.getContentType().equals(StoreContent.ContentType.BANNER)) {
-				logger.trace("Ha llegado un banner, mi no saber todavía eue hacer");
+				writeTitle(sc.getTextContent(), contents, containsBanner, currentPosition );
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NLINE)) {
 				// Escribimos un párrafo vacio
 				writeBody("", contents);
@@ -148,9 +137,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 				contents = createPage(band, blankPage);
 				writeBanner(sc.getTextContent(), contents);
 				contents.beginText();
-				resetPage(contents);
+				resetPageAt(contents, containsBanner);
 			}
+		}
+		contents.endText();
 
+		if (containsBanner) {
+			writeBanner(storeContentList.get(0).getTextContent(), contents);
 		}
 
 		contents.close();
@@ -285,7 +278,8 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param contents    the contents
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void writeTitle(String textContent, PDPageContentStream contents) throws IOException {
+	private void writeTitle(String textContent, PDPageContentStream contents, boolean containsBanner, float currentPosition)
+			throws IOException {
 
 		logger.trace("Begin writeTitle");
 
@@ -303,7 +297,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 			horizontalTranslation = ((WIDTH - widthcalculate) / 2) + marginLeft;
 		}
 
-		float verticalTranslation = getLineStackAndIncrement(fontSizeTitle);
+		float verticalTranslation = getLineStackAndIncrement(fontSizeTitle, currentPosition);
 		Matrix amtrix = Matrix.getTranslateInstance(horizontalTranslation + marginLeft, verticalTranslation);
 		contents.setTextMatrix(amtrix);
 		contents.setFont(font, fontSizeTitle);
@@ -317,11 +311,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param contents the contents
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void resetPage(PDPageContentStream contents) throws IOException {
+	private float resetPageAt(PDPageContentStream contents, boolean containsBanner) throws IOException {
 		logger.trace("Begin reset");
 		lineStack = HEIGHT - (MARGIN_BASE + Y_SIZE_BANNER);
-		float position = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
+		float position = (containsBanner) ? lineStack - (Y_SIZE_BANNER * 1.1f) : lineStack;
+		logger.debug("Altura para empezar a escribir :" + position);
 		contents.newLineAtOffset(marginLeft, position);
+		return position;
 	}
 
 	/**
@@ -348,18 +344,6 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(-(MARGIN_BASE + marginLeft), -6f);
 
 		logger.trace("End writeList");
-	}
-
-	/**
-	 * Write left content.
-	 *
-	 * @param textContent the text content
-	 * @param contents    the contents
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void writeLeftContent(String textContent, PDPageContentStream contents) throws IOException {
-		writeTitle(textContent, contents);
-
 	}
 
 	/**
@@ -408,9 +392,9 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param sizeFont the size font
 	 * @return the line stack and increment
 	 */
-	private float getLineStackAndIncrement(int sizeFont) {
-		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
-		logger.trace("posición  {}", lineStackCurrent);
+	private float getLineStackAndIncrement(int sizeFont, float currentPosition) {
+		float lineStackCurrent = currentPosition ;
+		logger.debug("posición  {}", lineStackCurrent);
 		lineStack = lineStack - sizeFont;
 		return lineStackCurrent;
 	}

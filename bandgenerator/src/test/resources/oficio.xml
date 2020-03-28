@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pdfTemplate>
 	<storeContentList>
+		<contentType>BANNER</contentType>
+		<textContent>banner.png</textContent>
+	</storeContentList>
+	<storeContentList>
 		<contentType>TITLE</contentType>
 		<textContent>Solicitud de Registro: ${csvDocument}.
 		</textContent>
