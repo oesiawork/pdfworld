@@ -39,6 +39,7 @@ public class CustomTemplatesTest {
 		FieldContainer fieldContainer = new FieldContainer();
 		Map<String, String> container = new HashMap<>();
 		container.put("csvDocument", "CSV8976450048556BENT");
+		container.put("nombre", "Andrés Gaudioso");
 		container.put("param", "Andrés$Beatriz$Tomás$Carmen");
 		fieldContainer.setContainer(container);
 

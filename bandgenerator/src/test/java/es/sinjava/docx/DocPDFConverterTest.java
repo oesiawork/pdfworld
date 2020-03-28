@@ -45,7 +45,7 @@ public class DocPDFConverterTest {
 		InputStream docInPut = DocPDFConverterTest.class.getClassLoader().getResourceAsStream("libros.docx");
 		PDDocument documentoBase = DocPDFConverter.getPDF(docInPut);
 		File tempFile = File.createTempFile("Word2", ".pdf");
-		tempFile.deleteOnExit();
+//		tempFile.deleteOnExit();
 		documentoBase.save(tempFile);
 		Assert.assertTrue(tempFile.canRead());
 
