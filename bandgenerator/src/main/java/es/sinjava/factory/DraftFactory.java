@@ -29,7 +29,7 @@ public class DraftFactory {
 	private static final ContentType LIST = StoreContent.ContentType.LIST;
 
 	/** The Constant logger. */
-	private static final  Logger logger = LoggerFactory.getLogger(DraftFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(DraftFactory.class);
 
 	/**
 	 * Gets the draft.
@@ -41,21 +41,25 @@ public class DraftFactory {
 	public static PdfTemplate getDraft(PdfTemplate pdfTemplate, FieldContainer fc) {
 		logger.info("Begin getDraft");
 		Map<String, String> fields = fc.getContainer();
+		// Reemplazamos las semillas por el contenido del fieldContainer
 
 		for (StoreContent contentStore : pdfTemplate.getStoreContentList()) {
 			// Eliminamos carácteres no imprimibles
 			String seed = contentStore.getTextContent().replaceAll("\\p{C}", "");
 
 			if (seed.contains("${") && !contentStore.getContentType().equals(LIST)) {
-				logger.debug(" Encontrada semilla");
+				logger.debug(" Encontrada semilla en " + seed);
 				for (Entry<String, String> entry : fields.entrySet()) {
-					contentStore.setTextContent(seed.replace("${" + entry.getKey() + "}", entry.getValue()));
+					String candidate= "${" + entry.getKey() + "}";
+					logger.debug("Es candidate "+ candidate);
+					seed =seed.replace(candidate, entry.getValue());
+					contentStore.setTextContent(seed);
 				}
 			} else if (seed.contains("${") && contentStore.getContentType().equals(LIST)) {
 				// es un caso de interación sobre los objetos
 				List<String> inputList = new ArrayList<>();
 				String fieldName = seed.substring(seed.indexOf("${") + 2, seed.indexOf('}'));
-				logger.info("Capturando las semilla {}" , fieldName);
+				logger.info("Capturando las semilla {}", fieldName);
 
 				for (String input : fields.get(fieldName).split("\\$")) {
 					inputList.add(seed.replace("${" + fieldName + "}", input));
