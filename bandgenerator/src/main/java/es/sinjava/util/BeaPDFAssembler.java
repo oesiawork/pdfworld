@@ -333,7 +333,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(MARGIN_BASE + marginLeft, -6f);
 
 		for (String item : items) {
-			contents.showText("-" + item);
+			contents.showText(item);
 			contents.newLineAtOffset(0f, -12f);
 		}
 		contents.newLineAtOffset(-(MARGIN_BASE + marginLeft), -6f);
