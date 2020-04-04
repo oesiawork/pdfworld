@@ -119,8 +119,8 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			logger.debug("Dimensiones anchura " + inProgress.getBBox().getWidth());
 
 			LayerUtility layerUtility = new LayerUtility(document);
-			Matrix matrix = Matrix.getScaleInstance(0.9f, 0.9f);
-			matrix.translate(WIDTH * 0.1f, HEIGHT * 0.1f);
+			Matrix matrix = Matrix.getScaleInstance(0.8f, 0.8f);
+			matrix.translate(WIDTH * 0.2f, HEIGHT * 0.2f);
 
 			if (inProgress.getBBox().getWidth() > inProgress.getBBox().getHeight()) {
 				// Nos lo llevamos al fondo de la página rotado
