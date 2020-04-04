@@ -28,6 +28,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
+import es.sinjava.pdf.generator.DocumentBandGenerator;
 
 /**
  * The Class BeaPDFBandAssembler.
@@ -73,7 +74,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		if (pdImageBand == null) {
 			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
 			pdImageBand = PDImageXObject.createFromFile(
-					BeaPDFBandAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
+					DocumentBandGenerator.class.getClassLoader().getResource("banda.jpg").getFile(), document);
 		}
 
 		InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
@@ -86,12 +87,12 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			PDPageContentStream contents = new PDPageContentStream(document, blankPage);
 
 			if (band.getPosition().equals(Band.Position.BOTTON)) {
-				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED * FACTOR_A4_SHAPE);
+//				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED * FACTOR_A4_SHAPE);
 			} else {
 				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 			}
 
-			contents.restoreGraphicsState();
+//			contents.restoreGraphicsState();
 
 			// Lo inicializamos como matrix horizontal
 			Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
@@ -101,13 +102,18 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 				matrixVertical.rotate(Math.PI / 2);
 			}
 
-			insertQRCode(band, document, contents);
+//			insertQRCode(band, document, contents);
+		
 
 			// metemos el texto
-			pushContent(band, contents, font, matrixVertical);
+//			pushContent(band, contents, font, matrixVertical);
 
 			// Control si es horizontal la página
 			PDPage inProgress = documentIn.getPage(currentPage);
+			
+//			PDDocument newDocument = new PDDocument();
+//			newDocument.addPage(inProgress);
+//			newDocument.save("Coco.pdf");
 
 			logger.debug("Dimensiones altura  " + inProgress.getBBox().getHeight());
 			logger.debug("Dimensiones anchura " + inProgress.getBBox().getWidth());
@@ -125,7 +131,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 
 			contents.transform(matrix);
 
-			PDFormXObject form = layerUtility.importPageAsForm(documentIn, currentPage);
+			PDFormXObject form = layerUtility.importPageAsForm(documentIn, inProgress);
 
 			contents.drawForm(form);
 			contents.restoreGraphicsState();
@@ -195,7 +201,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			// Insertamos el código qr
 			QRCodeWriter qrCodeWriter = new QRCodeWriter();
 			try {
-				BitMatrix bitMatrix = qrCodeWriter.encode(band.getQrCode(), BarcodeFormat.QR_CODE, 90, 90);
+				BitMatrix bitMatrix = qrCodeWriter.encode(band.getQrCode(), BarcodeFormat.QR_CODE, 80, 80);
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				MatrixToImageWriter.writeToStream(bitMatrix, "PNG", stream);

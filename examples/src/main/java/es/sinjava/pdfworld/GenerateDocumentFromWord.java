@@ -2,7 +2,6 @@ package es.sinjava.pdfworld;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -15,11 +14,11 @@ public class GenerateDocumentFromWord {
 
 	public static void main(String[] args) throws Exception {
 		InputStream docInPut = new FileInputStream(
-				GenerateDocumentFromWord.class.getClassLoader().getResource("solicitudbase.docx").getFile());
+				GenerateDocumentFromWord.class.getClassLoader().getResource("avanzado.docx").getFile());
 		FieldContainer fieldContainer = new FieldContainer();
 		fieldContainer.setContainer(new HashMap<String, String>());
 		fieldContainer.getContainer().put("csvDocument", "CSV45998995556BENT");
-		fieldContainer.getContainer().put("listItem", "Tocomocho");
+		fieldContainer.getContainer().put("listItem", "tocomocho");
 		fieldContainer.getContainer().put("date", "28 de Diciembre de 2018");
 		PDDocument documentoBase = DocPDFConverter.getPDF(docInPut, fieldContainer);
 		File tempFile =  new File("Word.pdf");

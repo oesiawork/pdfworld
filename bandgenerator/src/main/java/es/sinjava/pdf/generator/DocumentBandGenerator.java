@@ -57,7 +57,7 @@ public class DocumentBandGenerator {
 
 		logger.info("Begin buildAsFile");
 		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
-		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
+		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler(DocumentBandGenerator.class.getClassLoader());
 		Band band = null;
 		if (bandTemplate != null) {
 			band = BandFactory.getBand(bandTemplate, fc);
@@ -113,7 +113,7 @@ public class DocumentBandGenerator {
 
 		logger.info("Begin buildAsFile");
 		PdfTemplate pdfDraft = DraftFactory.getDraft(pdfTemplate, fieldContainer);
-		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler();
+		BeaPDFAssembler beapdfAssembler = new BeaPDFAssembler(DocumentBandGenerator.class.getClassLoader());
 		Band band = null;
 		if (bandTemplate != null) {
 			band = BandFactory.getBand(bandTemplate, fc);

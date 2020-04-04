@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>es.sinjava</groupId>
 			<artifactId>bandgenerator</artifactId>
-			<version>1.0.0-RC</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -24,8 +24,8 @@ public class Band {
 		
 		/** The left. */
 		LEFT, 
- /** The botton. */
- BOTTON
+		 /** The botton. */
+		 BOTTON
 	}
 
 	/**

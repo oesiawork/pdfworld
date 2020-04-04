@@ -78,25 +78,43 @@ public class BeaPDFAssembler extends PDFAssembler {
 	/** The font. */
 	private PDType0Font font;
 
+//	/**
+//	 * Instantiates a new bea PDF assembler.
+//	 */
+//	public BeaPDFAssembler() {
+//		logger.info(" Constructor BeaPDFAssembler ");
+//		logger.trace("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
+//
+//		try {
+//			pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
+//			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent());
+//
+//			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+//			font = PDType0Font.load(document, arial, true);
+//			logger.trace("Empotrado el tipo de letra de la banda");
+//		} catch (IOException e) {
+//			logger.error("No se ha encontrado un recurso necesario", e);
+//		}
+//	}
+
 	/**
-	 * Instantiates a new bea PDF assembler.
+	 * Instantiates a new bea PDF assembler. Y que me pille el path de quien lo esta
+	 * ejecutando
 	 */
-	public BeaPDFAssembler() {
+	public BeaPDFAssembler(ClassLoader classLoader) {
 		logger.info(" Constructor BeaPDFAssembler ");
 		logger.trace("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
 
 		try {
-
 			pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
 			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent());
 
-			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+			InputStream arial = classLoader.getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
 			logger.trace("Empotrado el tipo de letra de la banda");
 		} catch (IOException e) {
 			logger.error("No se ha encontrado un recurso necesario", e);
 		}
-
 	}
 
 	/**
