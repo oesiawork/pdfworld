@@ -92,8 +92,6 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 			}
 
-//			contents.restoreGraphicsState();
-
 			// Lo inicializamos como matrix horizontal
 			Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
 
@@ -103,37 +101,39 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 			}
 
 //			insertQRCode(band, document, contents);
-		
 
 			// metemos el texto
 //			pushContent(band, contents, font, matrixVertical);
 
 			// Control si es horizontal la página
 			PDPage inProgress = documentIn.getPage(currentPage);
-			
-//			PDDocument newDocument = new PDDocument();
-//			newDocument.addPage(inProgress);
-//			newDocument.save("Coco.pdf");
 
 			logger.debug("Dimensiones altura  " + inProgress.getBBox().getHeight());
 			logger.debug("Dimensiones anchura " + inProgress.getBBox().getWidth());
 
 			LayerUtility layerUtility = new LayerUtility(document);
-			Matrix matrix = Matrix.getScaleInstance(0.8f, 0.8f);
-			matrix.translate(WIDTH * 0.2f, HEIGHT * 0.2f);
+			Matrix matrix = Matrix.getScaleInstance(0.85f, 0.85f);
+			matrix.translate(WIDTH * 0.10f, HEIGHT * 0.10f);
 
 			if (inProgress.getBBox().getWidth() > inProgress.getBBox().getHeight()) {
 				// Nos lo llevamos al fondo de la página rotado
 				Matrix matrixHorizontal = Matrix.getRotateInstance(Math.PI / 2, WIDTH, -HEIGHT * 0.05f);
-
 				matrix.concatenate(matrixHorizontal);
 			}
-
 			contents.transform(matrix);
 
 			PDFormXObject form = layerUtility.importPageAsForm(documentIn, inProgress);
 
 			contents.drawForm(form);
+
+			// Reseteamos al principio de la página con escala normal
+			Matrix matrixReset = Matrix.getTranslateInstance(-WIDTH * 0.10f, -HEIGHT * 0.10f);
+			contents.transform(matrixReset);
+			
+			pushContent(band, contents, font, matrixVertical);
+
+			insertQRCode(band, document, contents);
+			
 			contents.restoreGraphicsState();
 			contents.saveGraphicsState();
 			contents.close();
@@ -241,7 +241,6 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		contents.showText(band.getTemplate().get(Template.FOOTER));
 
 		contents.endText();
-		contents.restoreGraphicsState();
 		logger.debug("End pushContent");
 	}
 
