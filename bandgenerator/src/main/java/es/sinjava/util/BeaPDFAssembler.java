@@ -57,7 +57,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 	private static final float Y_SIZE_BANNER = DEFAULT_SIZE_FONT * 5f;
 
 	/** The Constant IMAGEBANDFILE. */
-	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("bandClara.png")
+	private static final String IMAGEBANDFILE = BeaPDFAssembler.class.getClassLoader().getResource("banda.jpg")
 			.getFile();
 
 	/** The logger. */
@@ -72,34 +72,49 @@ public class BeaPDFAssembler extends PDFAssembler {
 	/** The margin left. */
 	private float marginLeft;
 
-	/** The contains banner. */
-	private boolean containsBanner;
-
 	/** The line stack. */
 	private float lineStack = HEIGHT - 10f * DEFAULT_SIZE_FONT;
 
 	/** The font. */
 	private PDType0Font font;
 
+//	/**
+//	 * Instantiates a new bea PDF assembler.
+//	 */
+//	public BeaPDFAssembler() {
+//		logger.info(" Constructor BeaPDFAssembler ");
+//		logger.trace("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
+//
+//		try {
+//			pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
+//			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent());
+//
+//			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+//			font = PDType0Font.load(document, arial, true);
+//			logger.trace("Empotrado el tipo de letra de la banda");
+//		} catch (IOException e) {
+//			logger.error("No se ha encontrado un recurso necesario", e);
+//		}
+//	}
+
 	/**
-	 * Instantiates a new bea PDF assembler.
+	 * Instantiates a new bea PDF assembler. Y que me pille el path de quien lo esta
+	 * ejecutando
 	 */
-	public BeaPDFAssembler() {
+	public BeaPDFAssembler(ClassLoader classLoader) {
 		logger.info(" Constructor BeaPDFAssembler ");
 		logger.trace("Dimensiones del documento A4  {}  por  {}", WIDTH, HEIGHT);
 
 		try {
-
 			pdImageBand = PDImageXObject.createFromFile(IMAGEBANDFILE, document);
-			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent() );
+			logger.trace("Cargada la imagen de la banda {}", pdImageBand.getBitsPerComponent());
 
-			InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+			InputStream arial = classLoader.getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(document, arial, true);
 			logger.trace("Empotrado el tipo de letra de la banda");
 		} catch (IOException e) {
 			logger.error("No se ha encontrado un recurso necesario", e);
 		}
-
 	}
 
 	/**
@@ -117,26 +132,18 @@ public class BeaPDFAssembler extends PDFAssembler {
 		PDPage blankPage = new PDPage();
 		PDPageContentStream contents = createPage(band, blankPage);
 
-		containsBanner = storeContentList.get(0).getContentType().equals(StoreContent.ContentType.BANNER);
+		boolean containsBanner = storeContentList.get(0).getContentType().equals(StoreContent.ContentType.BANNER);
 
-		if (containsBanner) {
-			writeBanner(storeContentList.get(0).getTextContent(), contents);
-		}
 		contents.beginText();
-		// Lo posicionamos correctamente
-		resetPage(contents);
-
+		float currentPosition = resetPageAt(contents, containsBanner);
+		logger.debug("Escibiendo en position {}", currentPosition);
 		for (StoreContent sc : storeContentList) {
 			if (sc.getContentType().equals(StoreContent.ContentType.BODY)) {
 				writeBody(sc.getTextContent(), contents);
-			} else if (sc.getContentType().equals(StoreContent.ContentType.LEFTCONTENT)) {
-				writeLeftContent(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.LIST)) {
 				writeList(sc.getTextContent(), contents);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.TITLE)) {
-				writeTitle(sc.getTextContent(), contents);
-			} else if (sc.getContentType().equals(StoreContent.ContentType.BANNER)) {
-				logger.trace("Ha llegado un banner, mi no saber todavía eue hacer");
+				writeTitle(sc.getTextContent(), contents, containsBanner, currentPosition);
 			} else if (sc.getContentType().equals(StoreContent.ContentType.NLINE)) {
 				// Escribimos un párrafo vacio
 				writeBody("", contents);
@@ -148,9 +155,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 				contents = createPage(band, blankPage);
 				writeBanner(sc.getTextContent(), contents);
 				contents.beginText();
-				resetPage(contents);
+				resetPageAt(contents, containsBanner);
 			}
+		}
+		contents.endText();
 
+		if (containsBanner) {
+			writeBanner(storeContentList.get(0).getTextContent(), contents);
 		}
 
 		contents.close();
@@ -177,16 +188,16 @@ public class BeaPDFAssembler extends PDFAssembler {
 
 		} else if (band != null && band.getPosition().equals(Band.Position.LEFT)) {
 			contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
-			logger.trace("Banda de tamaño {}  por {}", WIDTH * FACTOR_REDUCED, HEIGHT);
+//			logger.trace("Banda de tamaño {}  por {}", WIDTH * FACTOR_REDUCED, HEIGHT);
 			marginLeft = WIDTH * FACTOR_REDUCED;
 		} else {
 			marginLeft = MARGIN_BASE;
 			return contents;
 		}
 
-		contents.restoreGraphicsState();
-
-		insertQRCode(band, document, contents);
+		if (StringUtils.isNotBlank(band.getQrCode())) {
+			insertQRCode(band, document, contents);
+		}
 
 		// Lo inicializamos como matrix horizontal
 		Matrix matrixText = Matrix.getTranslateInstance(100f, 30f);
@@ -225,7 +236,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.showText(band.getTemplate().get(Template.FOOTER));
 
 		contents.endText();
-		contents.restoreGraphicsState();
+
 		logger.debug("End pushContent");
 	}
 
@@ -241,23 +252,18 @@ public class BeaPDFAssembler extends PDFAssembler {
 
 		logger.debug("Begin insertQRCode");
 
-		if (StringUtils.isNotBlank(band.getQrCode())) {
-			// Insertamos el código qr
-			QRCodeWriter qrCodeWriter = new QRCodeWriter();
-			try {
-				BitMatrix bitMatrix = qrCodeWriter.encode(band.getQrCode(), BarcodeFormat.QR_CODE, 90, 90);
-
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				MatrixToImageWriter.writeToStream(bitMatrix, "PNG", stream);
-				PDImageXObject qr = PDImageXObject.createFromByteArray(documentOut, stream.toByteArray(), "QR");
-				contents.drawImage(qr, 0, 0);
-				contents.restoreGraphicsState();
-
-			} catch (WriterException e) {
-				logger.error("No se ha podido generar el código QR", e);
-			}
-
+		// Insertamos el código qr
+		QRCodeWriter qrCodeWriter = new QRCodeWriter();
+		try {
+			BitMatrix bitMatrix = qrCodeWriter.encode(band.getQrCode(), BarcodeFormat.QR_CODE, 90, 90);
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			MatrixToImageWriter.writeToStream(bitMatrix, "PNG", stream);
+			PDImageXObject qr = PDImageXObject.createFromByteArray(documentOut, stream.toByteArray(), "QR");
+			contents.drawImage(qr, 0, 0);
+		} catch (WriterException e) {
+			logger.error("No se ha podido generar el código QR", e);
 		}
+
 	}
 
 	/**
@@ -285,7 +291,8 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param contents    the contents
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void writeTitle(String textContent, PDPageContentStream contents) throws IOException {
+	private void writeTitle(String textContent, PDPageContentStream contents, boolean containsBanner,
+			float currentPosition) throws IOException {
 
 		logger.trace("Begin writeTitle");
 
@@ -303,7 +310,7 @@ public class BeaPDFAssembler extends PDFAssembler {
 			horizontalTranslation = ((WIDTH - widthcalculate) / 2) + marginLeft;
 		}
 
-		float verticalTranslation = getLineStackAndIncrement(fontSizeTitle);
+		float verticalTranslation = getLineStackAndIncrement(fontSizeTitle, currentPosition);
 		Matrix amtrix = Matrix.getTranslateInstance(horizontalTranslation + marginLeft, verticalTranslation);
 		contents.setTextMatrix(amtrix);
 		contents.setFont(font, fontSizeTitle);
@@ -317,11 +324,13 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param contents the contents
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void resetPage(PDPageContentStream contents) throws IOException {
+	private float resetPageAt(PDPageContentStream contents, boolean containsBanner) throws IOException {
 		logger.trace("Begin reset");
 		lineStack = HEIGHT - (MARGIN_BASE + Y_SIZE_BANNER);
-		float position = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
+		float position = (containsBanner) ? lineStack - (Y_SIZE_BANNER * 1.1f) : lineStack;
+		logger.debug("Altura para empezar a escribir :" + position);
 		contents.newLineAtOffset(marginLeft, position);
+		return position;
 	}
 
 	/**
@@ -342,24 +351,12 @@ public class BeaPDFAssembler extends PDFAssembler {
 		contents.newLineAtOffset(MARGIN_BASE + marginLeft, -6f);
 
 		for (String item : items) {
-			contents.showText("-" + item);
+			contents.showText(item);
 			contents.newLineAtOffset(0f, -12f);
 		}
 		contents.newLineAtOffset(-(MARGIN_BASE + marginLeft), -6f);
 
 		logger.trace("End writeList");
-	}
-
-	/**
-	 * Write left content.
-	 *
-	 * @param textContent the text content
-	 * @param contents    the contents
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void writeLeftContent(String textContent, PDPageContentStream contents) throws IOException {
-		writeTitle(textContent, contents);
-
 	}
 
 	/**
@@ -408,9 +405,9 @@ public class BeaPDFAssembler extends PDFAssembler {
 	 * @param sizeFont the size font
 	 * @return the line stack and increment
 	 */
-	private float getLineStackAndIncrement(int sizeFont) {
-		float lineStackCurrent = (containsBanner) ? lineStack - (Y_SIZE_BANNER) : lineStack;
-		logger.trace("posición  {}", lineStackCurrent);
+	private float getLineStackAndIncrement(int sizeFont, float currentPosition) {
+		float lineStackCurrent = currentPosition;
+		logger.debug("posición  {}", lineStackCurrent);
 		lineStack = lineStack - sizeFont;
 		return lineStackCurrent;
 	}

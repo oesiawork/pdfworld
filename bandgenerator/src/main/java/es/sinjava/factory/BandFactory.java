@@ -40,10 +40,7 @@ public class BandFactory {
 		line = populateValues(bandTemplate.getLineTree(), fieldContainer);
 		template.put(Template.FOOTER, line);
 
-		String qr = (fieldContainer.getContainer().get(Template.QR) != null)
-				? fieldContainer.getContainer().get(Template.QR)
-				: "";
-		newBand.setQrCode(qr);
+		newBand.setQrCode(bandTemplate.getQrCode());
 
 		newBand.setTemplate(template);
 		return newBand;

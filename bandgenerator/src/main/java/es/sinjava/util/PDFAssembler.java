@@ -7,7 +7,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /**
- * The Class PDFAssembler.
+ * The Class PDFAssembler. addBand
  */
 public class PDFAssembler {
 	

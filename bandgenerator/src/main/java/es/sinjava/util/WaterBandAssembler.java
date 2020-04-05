@@ -6,15 +6,16 @@ package es.sinjava.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.pdfbox.multipdf.LayerUtility;
+import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
 import org.slf4j.Logger;
@@ -28,12 +29,17 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import es.sinjava.model.Band;
 import es.sinjava.model.Template;
-import es.sinjava.pdf.generator.DocumentBandGenerator;
 
 /**
  * The Class BeaPDFBandAssembler.
  */
-public class BeaPDFBandAssembler extends PDFAssembler {
+public class WaterBandAssembler {
+	
+	/** The Constant WIDTH. */
+	protected static final float WIDTH = PDRectangle.A4.getWidth();
+	
+	/** The Constant HEIGHT. */
+	protected static final float HEIGHT = PDRectangle.A4.getHeight();
 
 	private static final float FACTOR_A4_SHAPE = 0.7F;
 
@@ -41,7 +47,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 	private static final float FACTOR_REDUCED = 0.1f;
 
 	/** The logger. */
-	private final Logger logger = LoggerFactory.getLogger(BeaPDFBandAssembler.class);
+	private final Logger logger = LoggerFactory.getLogger(WaterBandAssembler.class);
 
 	/** The pd image band. */
 	private PDImageXObject pdImageBand;
@@ -70,75 +76,49 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		logger.info("Begin build");
 
 		logger.info("Documento de entrada tiene {} páginas", documentIn.getNumberOfPages());
+		
+		PDDocument documentBand = generateDocumentBand(band);
+		
+		Overlay overlay = new Overlay();
+		overlay.setAllPagesOverlayPDF(documentBand);
+		overlay.setInputPDF(documentIn);
+		overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
+		overlay.overlay(new HashMap<Integer, String>());
+	
+		return documentIn;
+	}
+
+	private PDDocument generateDocumentBand(Band band) throws IOException {
+		PDDocument documentBand = new PDDocument();
 
 		if (pdImageBand == null) {
-			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
 			pdImageBand = PDImageXObject.createFromFile(
-					DocumentBandGenerator.class.getClassLoader().getResource("banda.jpg").getFile(), document);
+					WaterBandAssembler.class.getClassLoader().getResource("banda.jpg").getFile(), documentBand);
 		}
-
 		InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
-		font = PDType0Font.load(document, arial, true);
+		font = PDType0Font.load(documentBand, arial, true);
 
-		for (int currentPage = 0; currentPage < documentIn.getNumberOfPages(); currentPage++) {
+		PDPage blankPage = new PDPage();
+		documentBand.addPage(blankPage);
+		PDPageContentStream contents = new PDPageContentStream(documentBand, blankPage);
 
-			PDPage blankPage = new PDPage();
-			document.addPage(blankPage);
-			PDPageContentStream contents = new PDPageContentStream(document, blankPage);
+		contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
 
-			if (band.getPosition().equals(Band.Position.BOTTON)) {
-//				contents.drawImage(pdImageBand, 0, 0, WIDTH, HEIGHT * FACTOR_REDUCED * FACTOR_A4_SHAPE);
-			} else {
-				contents.drawImage(pdImageBand, 0, 0, WIDTH * FACTOR_REDUCED, HEIGHT);
-			}
+		Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
 
-			// Lo inicializamos como matrix horizontal
-			Matrix matrixVertical = Matrix.getTranslateInstance(100f, 30f);
-
-			if (band.getPosition().equals(Band.Position.LEFT)) {
-				matrixVertical = Matrix.getTranslateInstance(25f, 100f);
-				matrixVertical.rotate(Math.PI / 2);
-			}
-
-//			insertQRCode(band, document, contents);
-
-			// metemos el texto
-//			pushContent(band, contents, font, matrixVertical);
-
-			// Control si es horizontal la página
-			PDPage inProgress = documentIn.getPage(currentPage);
-
-			logger.debug("Dimensiones altura  " + inProgress.getBBox().getHeight());
-			logger.debug("Dimensiones anchura " + inProgress.getBBox().getWidth());
-
-			LayerUtility layerUtility = new LayerUtility(document);
-			Matrix matrix = Matrix.getScaleInstance(0.85f, 0.85f);
-			matrix.translate(WIDTH * 0.10f, HEIGHT * 0.10f);
-
-			if (inProgress.getBBox().getWidth() > inProgress.getBBox().getHeight()) {
-				// Nos lo llevamos al fondo de la página rotado
-				Matrix matrixHorizontal = Matrix.getRotateInstance(Math.PI / 2, WIDTH, -HEIGHT * 0.05f);
-				matrix.concatenate(matrixHorizontal);
-			}
-			contents.transform(matrix);
-
-			PDFormXObject form = layerUtility.importPageAsForm(documentIn, inProgress);
-
-			contents.drawForm(form);
-
-			// Reseteamos al principio de la página con escala normal
-			Matrix matrixReset = Matrix.getTranslateInstance(-WIDTH * 0.10f, -HEIGHT * 0.10f);
-			contents.transform(matrixReset);
-			
-			pushContent(band, contents, font, matrixVertical);
-
-			insertQRCode(band, document, contents);
-			
-			contents.restoreGraphicsState();
-			contents.saveGraphicsState();
-			contents.close();
+		if (band.getPosition().equals(Band.Position.LEFT)) {
+			matrixVertical = Matrix.getTranslateInstance(25f, 100f);
+			matrixVertical.rotate(Math.PI / 2);
 		}
-		return document;
+
+		pushContent(band, contents, font, matrixVertical);
+
+		insertQRCode(band, documentBand, contents);
+
+		contents.restoreGraphicsState();
+		contents.saveGraphicsState();
+		contents.close();
+		return documentBand;
 	}
 
 	/**
@@ -158,7 +138,7 @@ public class BeaPDFBandAssembler extends PDFAssembler {
 		if (pdImageBand == null) {
 			// si ya lo tenemos lo utilizaremos la misma imagen, optimizando el espacio
 			pdImageBand = PDImageXObject.createFromFile(
-					BeaPDFBandAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
+					WaterBandAssembler.class.getClassLoader().getResource("bandClara.png").getFile(), document);
 		}
 
 		PDPage blankPage = new PDPage();

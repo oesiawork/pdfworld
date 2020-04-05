@@ -39,7 +39,6 @@ public class DocumentBandGeneratorTest {
 		logger.debug("Begin testBuildAsFile");
 		File orquestationFile = File.createTempFile("testBuildAsFile", ".pdf");
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, bandTemplate, fcBanda);
-		orquestationFile.deleteOnExit();
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");
 	}
@@ -48,7 +47,6 @@ public class DocumentBandGeneratorTest {
 	public void testBuildAsFileWithoutBand() throws IOException {
 		logger.debug("Begin testBuildAsFile");
 		File orquestationFile = File.createTempFile("testBuildAsFileWithoutBand", ".pdf");
-		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.buildAsFile(orquestationFile, pdfTemplate, fieldContainer, null, null);
 		Assert.assertTrue(orquestationFile.canRead());
 		logger.debug("End testBuildAsFile");
@@ -74,7 +72,6 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testAddBandByteArrayFileBandTemplateFieldContainer() throws IOException {
 		File orquestationFile = File.createTempFile("testAddBandByteArrayFileBandTemplateFieldContainer", ".pdf");
-		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.addBand(senuelo, orquestationFile, bandTemplate, fcBanda);
 		Assert.assertTrue(orquestationFile.canRead());
 	}
@@ -82,7 +79,6 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testAddBandFileFileBandTemplateFieldContainer() throws IOException {
 		File orquestationFile = File.createTempFile("Test", ".pdf");
-		orquestationFile.deleteOnExit();
 		DocumentBandGenerator.addBand(senueloByte, orquestationFile, bandTemplate, fcBanda);
 		Assert.assertTrue(orquestationFile.canRead());
 	}
@@ -90,7 +86,6 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testAddBandHorizontalFile() throws IOException {
 		File orquestationFile = File.createTempFile("Horizontal", ".pdf");
-//		orquestationFile.deleteOnExit();
 		InputStream in = DocumentBandGeneratorTest.class.getClassLoader().getResourceAsStream("Horizontal.pdf");
 		byte[] horizontal = IOUtils.toByteArray(in );
 		DocumentBandGenerator.addBand(horizontal, orquestationFile, bandTemplate, fcBanda);
@@ -100,7 +95,6 @@ public class DocumentBandGeneratorTest {
 	@Test
 	public void testAddBanHorizontalInHorizontalFile() throws IOException {
 		File orquestationFile = File.createTempFile("Horizontal", ".pdf");
-//		orquestationFile.deleteOnExit();
 		InputStream in = DocumentBandGeneratorTest.class.getClassLoader().getResourceAsStream("Horizontal.pdf");
 		byte[] horizontal = IOUtils.toByteArray(in );
 		bandTemplate.setPosition(Position.BOTTON);
@@ -121,7 +115,7 @@ public class DocumentBandGeneratorTest {
 	public static void setUpBeforeClass() throws Exception {
 
 		File templatePDF = new File(
-				DocumentBandGeneratorTest.class.getClassLoader().getResource("orquest.xml").getFile());
+				DocumentBandGeneratorTest.class.getClassLoader().getResource("draft.xml").getFile());
 		pdfTemplate = TemplateProvider.retrievePdfTemplate(templatePDF);
 		// datos parametrizados para la plantilla de pdf
 		fieldContainer = new FieldContainer();

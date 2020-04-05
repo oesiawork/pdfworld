@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pdfTemplate>
+	<storeContentList>
+		<contentType>BANNER</contentType>
+		<textContent>logodga.jpg</textContent>
+	</storeContentList>
+	<storeContentList>
+		<contentType>TITLE</contentType>
+		<textContent>Solicitud de Registro: ${csvDocument}.
+		</textContent>
+	</storeContentList>
+	<storeContentList>
+		<contentType>BODY</contentType>
+		<textContent>Petición al Servicio de Registro Telemático de la solicitud con los siguientes documentos adjuntos.</textContent>
+	</storeContentList>
+	<storeContentList>
+		<contentType>LIST</contentType>
+		<textContent>Documentos ${param} </textContent>
+	</storeContentList>
+</pdfTemplate>
+

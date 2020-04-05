@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+	mc:Ignorable="w14 w15 wp14">
+	<w:body>
+		<w:p w14:paraId="5C1A07E2" w14:textId="32783D3A"
+			w:rsidR="00410A32" w:rsidRDefault="00AB9670">
+			<w:r>
+				<w:t xml:space="preserve">Solicitud de Registro con </w:t>
+			</w:r>
+			<w:proofErr w:type="spellStart" />
+			<w:proofErr w:type="gramStart" />
+			<w:r>
+				<w:t>csv</w:t>
+			</w:r>
+			<w:proofErr w:type="spellEnd" />
+			<w:r>
+				<w:t xml:space="preserve"> :</w:t>
+			</w:r>
+			<w:proofErr w:type="gramEnd" />
+			<w:r>
+				<w:t xml:space="preserve"> ${</w:t>
+			</w:r>
+			<w:proofErr w:type="spellStart" />
+			<w:r>
+				<w:t>csvDocument</w:t>
+			</w:r>
+			<w:proofErr w:type="spellEnd" />
+			<w:r>
+				<w:t>}</w:t>
+			</w:r>
+		</w:p>
+		<w:p w14:paraId="6D5662D7" w14:textId="691C8CCB"
+			w:rsidR="00AB9670" w:rsidRPr="00317118" w:rsidRDefault="00AB9670"
+			w:rsidP="00AB9670">
+			<w:pPr>
+				<w:rPr>
+					<w:i />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00317118">
+				<w:rPr>
+					<w:i />
+				</w:rPr>
+				<w:t>Por la presente solicitamos que se registre en la fecha ${date}
+					los siguientes documentos:</w:t>
+			</w:r>
+		</w:p>
+		<w:p w14:paraId="4F249157" w14:textId="08262AB6"
+			w:rsidR="00AB9670" w:rsidRDefault="00AB9670" w:rsidP="00AB9670" />
+		<w:p w14:paraId="01CB8217" w14:textId="79689869"
+			w:rsidR="00AB9670" w:rsidRDefault="00AB9670" w:rsidP="00AB9670">
+			<w:pPr>
+				<w:pStyle w:val="Prrafodelista" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="1" />
+				</w:numPr>
+				<w:rPr>
+					<w:rFonts w:eastAsiaTheme="minorEastAsia" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:t>${</w:t>
+			</w:r>
+			<w:proofErr w:type="spellStart" />
+			<w:r>
+				<w:t>listItem</w:t>
+			</w:r>
+			<w:proofErr w:type="spellEnd" />
+			<w:r>
+				<w:t>}</w:t>
+			</w:r>
+			<w:bookmarkStart w:id="0" w:name="_GoBack" />
+			<w:bookmarkEnd w:id="0" />
+		</w:p>
+		<w:p w14:paraId="4DE75B77" w14:textId="06FAA3A8"
+			w:rsidR="00AB9670" w:rsidRDefault="00AB9670" w:rsidP="00AB9670" />
+		<w:p w14:paraId="00E17109" w14:textId="5B436F36"
+			w:rsidR="00AB9670" w:rsidRDefault="26FF2908" w:rsidP="26FF2908">
+			<w:pPr>
+				<w:jc w:val="right" />
+			</w:pPr>
+			<w:r>
+				<w:t>En Zaragoza a ${date}</w:t>
+			</w:r>
+		</w:p>
+		<w:sectPr w:rsidR="00AB9670">
+			<w:pgSz w:w="11906" w:h="16838" />
+			<w:pgMar w:top="1440" w:right="1440" w:bottom="1440"
+				w:left="1440" w:header="720" w:footer="720" w:gutter="0" />
+			<w:cols w:space="720" />
+			<w:docGrid w:linePitch="360" />
+		</w:sectPr>
+	</w:body>
+</w:document>

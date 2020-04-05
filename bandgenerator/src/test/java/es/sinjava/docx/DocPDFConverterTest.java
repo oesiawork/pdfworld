@@ -9,7 +9,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import es.sinjava.model.FieldContainer;
@@ -34,7 +33,9 @@ public class DocPDFConverterTest {
 		fieldContainer.getContainer().put("date", "28 de Diciembre de 2018");
 		PDDocument documentoBase = DocPDFConverter.getPDF(docInPut, fieldContainer);
 		File tempFile = File.createTempFile("Word", ".pdf");
-		tempFile.deleteOnExit();
+		// Para crearlo en el proyecto y verlo:
+		tempFile = new File("Word.pdf");
+		// tempFile.deleteOnExit();
 		documentoBase.save(tempFile);
 		Assert.assertTrue(tempFile.canRead());
 	}
@@ -43,8 +44,8 @@ public class DocPDFConverterTest {
 	public void testGetPDFInputStreamFieldContainer() throws Exception {
 		InputStream docInPut = DocPDFConverterTest.class.getClassLoader().getResourceAsStream("libros.docx");
 		PDDocument documentoBase = DocPDFConverter.getPDF(docInPut);
-		File tempFile = File.createTempFile("Word", ".pdf");
-		tempFile.deleteOnExit();
+		File tempFile = File.createTempFile("Word2", ".pdf");
+//		tempFile.deleteOnExit();
 		documentoBase.save(tempFile);
 		Assert.assertTrue(tempFile.canRead());
 
