@@ -8,6 +8,14 @@ package es.sinjava.pdf.model;
  */
 public class StoreContent {
 
+	/** The content type. */
+	private ContentType contentType;
+
+	/** The text content. */
+	private String textContent;
+	
+	private String imageContent;
+
 	/**
 	 * Instantiates a new store content.
 	 */
@@ -24,11 +32,6 @@ public class StoreContent {
 		this.contentType = contentType;
 	}
 
-	/** The content type. */
-	private ContentType contentType;
-	
-	/** The text content. */
-	private String textContent;
 
 	/**
 	 * Gets the content type.
@@ -66,27 +69,19 @@ public class StoreContent {
 		this.textContent = textContent;
 	}
 
+	public String getImageContent() {
+		return imageContent;
+	}
+
+	public void setImageContent(String imageContent) {
+		this.imageContent = imageContent;
+	}
+
 	/**
 	 * The Enum ContentType.
 	 */
 	public enum ContentType {
-		
-		/** The title. */
-		TITLE, 
- /** The body. */
- BODY, 
- /** The list. */
- LIST, 
- /** The leftcontent. */
- LEFTCONTENT, 
- /** The banner. */
- BANNER, 
- /** The npage. */
- NPAGE, 
- /** The nline. */
- NLINE, 
- /** The nbannerpage. */
- NBANNERPAGE
+		TITLE, BODY, LIST, LEFTCONTENT, BANNER, NPAGE, NLINE, NBANNERPAGE, COMMON
 	}
 
 }
