@@ -4,11 +4,13 @@
 package es.sinjava.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.multipdf.LayerUtility;
 import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -16,6 +18,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
 import org.slf4j.Logger;
@@ -34,10 +37,10 @@ import es.sinjava.model.Template;
  * The Class BeaPDFBandAssembler.
  */
 public class WaterBandAssembler {
-	
+
 	/** The Constant WIDTH. */
 	protected static final float WIDTH = PDRectangle.A4.getWidth();
-	
+
 	/** The Constant HEIGHT. */
 	protected static final float HEIGHT = PDRectangle.A4.getHeight();
 
@@ -73,19 +76,55 @@ public class WaterBandAssembler {
 	 */
 	public PDDocument insertBand(PDDocument documentIn, Band band) throws IOException {
 
-		logger.info("Begin build");
-
 		logger.info("Documento de entrada tiene {} páginas", documentIn.getNumberOfPages());
-		
+
+		// Redimensionamos la página
+
+		PDDocument resized = new PDDocument();
+
+		for (int currentPage = 0; currentPage < documentIn.getNumberOfPages(); currentPage++) {
+
+			PDPage blankPage = new PDPage();
+			resized.addPage(blankPage);
+			PDPageContentStream contents = new PDPageContentStream(resized, blankPage);
+
+			LayerUtility layerUtility = new LayerUtility(resized);
+			Matrix matrix = Matrix.getScaleInstance(0.85f, 0.85f);
+			matrix.translate(WIDTH * 0.10f, HEIGHT * 0.10f);
+
+			contents.transform(matrix);
+
+			PDFormXObject form = layerUtility.importPageAsForm(resized, documentIn.getPage(currentPage));
+			contents.drawForm(form);
+			contents.restoreGraphicsState();
+			contents.close();
+		}
+
 		PDDocument documentBand = generateDocumentBand(band);
-		
+
 		Overlay overlay = new Overlay();
 		overlay.setAllPagesOverlayPDF(documentBand);
-		overlay.setInputPDF(documentIn);
+		overlay.setInputPDF(resized);
 		overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
 		overlay.overlay(new HashMap<Integer, String>());
-	
-		return documentIn;
+		overlay.close();
+		logger.info("Documento de entrada salida con {} páginas", documentIn.getNumberOfPages());
+		return resized;
+	}
+
+	public void overlapBand(PDDocument document, Band band, File outFile) throws IOException {
+		logger.info("Documento de entrada tiene {} páginas", document.getNumberOfPages());
+
+		PDDocument documentBand = generateDocumentBand(band);
+
+		try (Overlay overlay = new Overlay()) {
+			overlay.setAllPagesOverlayPDF(documentBand);
+			overlay.setInputPDF(document);
+			overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
+			overlay.overlay(new HashMap<Integer, String>());
+			document.save(outFile);
+		}
+		logger.info("Documento de entrada salida con {} páginas", document.getNumberOfPages());
 	}
 
 	private PDDocument generateDocumentBand(Band band) throws IOException {
