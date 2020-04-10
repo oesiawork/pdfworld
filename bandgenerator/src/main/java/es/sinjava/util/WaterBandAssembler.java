@@ -74,7 +74,7 @@ public class WaterBandAssembler {
 	 * @return the PD document
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public PDDocument insertBand(PDDocument documentIn, Band band) throws IOException {
+	public void insertBand(PDDocument documentIn, Band band, File outFile) throws IOException {
 
 		logger.info("Documento de entrada tiene {} páginas", documentIn.getNumberOfPages());
 
@@ -107,9 +107,10 @@ public class WaterBandAssembler {
 		overlay.setInputPDF(resized);
 		overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
 		overlay.overlay(new HashMap<Integer, String>());
-		overlay.close();
+		
 		logger.info("Documento de entrada salida con {} páginas", documentIn.getNumberOfPages());
-		return resized;
+		resized.save(outFile);
+		resized.close();
 	}
 
 	public void overlapBand(PDDocument document, Band band, File outFile) throws IOException {
@@ -134,7 +135,7 @@ public class WaterBandAssembler {
 			pdImageBand = PDImageXObject.createFromFile(
 					WaterBandAssembler.class.getClassLoader().getResource("banda.jpg").getFile(), documentBand);
 		}
-		InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
+		InputStream arial = WaterBandAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
 		font = PDType0Font.load(documentBand, arial, true);
 
 		PDPage blankPage = new PDPage();
