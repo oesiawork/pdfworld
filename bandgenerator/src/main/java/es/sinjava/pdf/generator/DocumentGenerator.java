@@ -50,6 +50,7 @@ public class DocumentGenerator {
 	private float cursor = BLOCK;
 
 	private PDPageContentStream contents;
+	private StoreContent common;
 
 	// Constructor privado
 	private DocumentGenerator() {
@@ -107,15 +108,17 @@ public class DocumentGenerator {
 		font = PDType0Font.load(newDocument, arial, true);
 
 		// Busqueda del bloque comun a todas las páginas
-		StoreContent common = selectCommon(storeContentList);
+		common = selectCommon(storeContentList);
 
 		if (common != null) {
-			contents = writeCommonPage(newDocument, common, blankPage);
+			blankPage = writeCommonPage(newDocument, common, blankPage);
 			cursor = BLOCK * 2.0f;
 		} else {
 			contents = new PDPageContentStream(newDocument, blankPage);
 			cursor = BLOCK;
 		}
+
+		newDocument.addPage(blankPage);
 
 		// EScribimos el resto del documento
 
@@ -132,8 +135,6 @@ public class DocumentGenerator {
 				writeList(newDocument, current, blankPage);
 			}
 		}
-
-		newDocument.addPage(blankPage);
 
 		contents.close();
 
@@ -166,10 +167,9 @@ public class DocumentGenerator {
 		return common;
 	}
 
-	private PDPageContentStream writeCommonPage(PDDocument newDocument, StoreContent common, PDPage commonPage)
-			throws IOException {
+	private PDPage writeCommonPage(PDDocument newDocument, StoreContent common, PDPage commonPage) throws IOException {
 
-		PDPageContentStream contents = new PDPageContentStream(newDocument, commonPage);
+		contents = new PDPageContentStream(newDocument, commonPage);
 		logger.trace("Begin writeCommonPage");
 
 		float heigthImage = BLOCK * 0.8f;// factor de corrección para que no llene todo el bloque
@@ -210,7 +210,55 @@ public class DocumentGenerator {
 		contents.showText(textContent);
 		contents.newLineAtOffset(-horizontalTranslation, -12f);
 		contents.endText();
-		return contents;
+		return commonPage;
+	}
+
+	private PDPage writeBanner(PDDocument newDocument, StoreContent common) throws IOException {
+
+		logger.trace("Begin writeCommonPage");
+		PDPage newPage = new PDPage();
+		newDocument.addPage(newPage);
+		contents = new PDPageContentStream(newDocument, newPage);
+
+		float heigthImage = BLOCK * 0.8f;// factor de corrección para que no llene todo el bloque
+		// Quitamos el margen izqquierdo y el derecho
+
+		float widhtImage = WIDTH - (marginLeft + CBLOCK);
+
+		float coordinateX = marginLeft;
+		float coordinateY = BLOCK * 10;
+
+		if (marginLeft > CBLOCK * 3.0f) {
+			// Si estamos en medio de un listado
+			coordinateX = marginLeft - CBLOCK * 2.0f;
+		}
+
+		if (StringUtils.isNotBlank(common.getImageContent())) {
+			logger.debug("Pintamos un banner {}", common.getImageContent());
+			PDImageXObject pdImageBand = PDImageXObject.createFromFile(
+					DocumentGenerator.class.getClassLoader().getResource(common.getImageContent()).getFile(),
+					newDocument);
+			contents.drawImage(pdImageBand, coordinateX, coordinateY, widhtImage, heigthImage);
+		}
+
+		int fontSizeTitle = DEFAULT_SIZE_FONT + 2;
+		String textContent = common.getTextContent();
+
+		// Posicionamos en el centro de la página
+
+		float widthcalculate = font.getStringWidth(textContent) / 1000 * fontSizeTitle;
+
+		float horizontalTranslation = ((CBLOCK * 10) - widthcalculate) / 2;
+
+		if (horizontalTranslation < 0) {
+			logger.debug("Se necesita bajar el tamaño de la letra");
+			fontSizeTitle -= 2;
+			widthcalculate = font.getStringWidth(textContent) / 1000 * fontSizeTitle;
+			horizontalTranslation = ((WIDTH - widthcalculate) / 2) + marginLeft;
+		}
+
+		cursor = HEIGHT - BLOCK * 4.0f;
+		return newPage;
 	}
 
 	private PDPageContentStream writeTitle(PDDocument newDocument, StoreContent title, PDPage commonPage)
@@ -250,6 +298,23 @@ public class DocumentGenerator {
 
 	private void writeBody(PDDocument newDocument, StoreContent current, PDPage blankPage) throws IOException {
 		logger.trace(" Se escribe el body");
+
+		// Comprobamos si hemos llegado cas al final de la página
+		if (cursor + BLOCK * 2.0f > HEIGHT) {
+			logger.debug("Cambio de página añadimos la anterior y pasamos a la siguiente");
+
+//			// Inicialización
+			InputStream arial = DocumentGenerator.class.getClassLoader().getResourceAsStream("arial.ttf");
+			font = PDType0Font.load(newDocument, arial, true);
+			contents.close();
+			if (common != null) {
+				blankPage = writeBanner(newDocument, common);
+				cursor = BLOCK * 2.0f;
+			} else {
+				contents = new PDPageContentStream(newDocument, new PDPage());
+				cursor = BLOCK;
+			}
+		}
 
 		String[] words = current.getTextContent().split(" ");
 		StringWriter stringWritter = new StringWriter();
