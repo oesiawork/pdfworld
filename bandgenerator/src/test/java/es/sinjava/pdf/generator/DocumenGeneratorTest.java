@@ -27,13 +27,26 @@ public class DocumenGeneratorTest {
 	private static FieldContainer fieldContainer;
 
 	@Test
-	public void testBuildAsFile() throws IOException {
+	public void testBuilFile() throws IOException {
 		logger.debug("Begin testBuildAsFile");
-		File destFile = File.createTempFile("testBuildAsFile", ".pdf");
-		DocumentGenerator.documentoFromTemplate(pdfTemplate, fieldContainer, destFile);
+		File destFile = File.createTempFile("documento", ".pdf");
+		DocumentGenerator.documentFromTemplate(pdfTemplate, fieldContainer, destFile);
 		Assert.assertTrue(destFile.canRead());
 		logger.debug("End testBuildAsFile");
 	}
+	
+	
+	@Test
+	public void testBuildDocumentForBand() throws IOException {
+		logger.debug("Begin testBuildAsFile");
+		File destFile = File.createTempFile("documentoBand", ".pdf");
+		DocumentGenerator.documentBandFromTemplate(pdfTemplate, fieldContainer, destFile);
+		Assert.assertTrue(destFile.canRead());
+		logger.debug("End testBuildAsFile");
+	}
+	
+	
+	
 	
 	@Before
 	public void setUp() throws Exception {

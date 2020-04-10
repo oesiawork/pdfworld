@@ -19,6 +19,9 @@ public class WaterBandFileOverlaping {
 	public static void main(String... args) throws Exception {
 		logger.info("Begin Process");
 		File inputFile = new File("Sherlock_Holmes.pdf");
+		
+		
+		
 		File outFile = new File("Over_Sherlock_Holmes.pdf");
 
 		// Recuperamos la banda
