@@ -230,7 +230,7 @@ public class DocumentGenerator {
 
 		if (marginLeft > CBLOCK * 3.0f) {
 			// Si estamos en medio de un listado
-			coordinateX = marginLeft - CBLOCK * 2.0f;
+			coordinateX = marginLeft - CBLOCK ;
 		}
 
 		if (StringUtils.isNotBlank(common.getImageContent())) {
@@ -241,23 +241,9 @@ public class DocumentGenerator {
 			contents.drawImage(pdImageBand, coordinateX, coordinateY, widhtImage, heigthImage);
 		}
 
-		int fontSizeTitle = DEFAULT_SIZE_FONT + 2;
-		String textContent = common.getTextContent();
 
-		// Posicionamos en el centro de la página
 
-		float widthcalculate = font.getStringWidth(textContent) / 1000 * fontSizeTitle;
-
-		float horizontalTranslation = ((CBLOCK * 10) - widthcalculate) / 2;
-
-		if (horizontalTranslation < 0) {
-			logger.debug("Se necesita bajar el tamaño de la letra");
-			fontSizeTitle -= 2;
-			widthcalculate = font.getStringWidth(textContent) / 1000 * fontSizeTitle;
-			horizontalTranslation = ((WIDTH - widthcalculate) / 2) + marginLeft;
-		}
-
-		cursor = HEIGHT - BLOCK * 4.0f;
+		cursor = CBLOCK * 3.5f;
 		return newPage;
 	}
 
@@ -309,7 +295,6 @@ public class DocumentGenerator {
 			contents.close();
 			if (common != null) {
 				blankPage = writeBanner(newDocument, common);
-				cursor = BLOCK * 2.0f;
 			} else {
 				contents = new PDPageContentStream(newDocument, new PDPage());
 				cursor = BLOCK;
