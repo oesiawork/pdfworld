@@ -26,6 +26,8 @@ import es.sinjava.pdf.model.StoreContent.ContentType;
 
 public class DocumentGenerator {
 
+	private static final float DEFAULT_SPACE = 16.0f;
+
 	private final Logger logger = LoggerFactory.getLogger(DocumentGenerator.class);
 
 	/** The Constant DEFAULT_SIZE_FONT. */
@@ -230,7 +232,7 @@ public class DocumentGenerator {
 
 		if (marginLeft > CBLOCK * 3.0f) {
 			// Si estamos en medio de un listado
-			coordinateX = marginLeft - CBLOCK ;
+			coordinateX = marginLeft - CBLOCK;
 		}
 
 		if (StringUtils.isNotBlank(common.getImageContent())) {
@@ -240,8 +242,6 @@ public class DocumentGenerator {
 					newDocument);
 			contents.drawImage(pdImageBand, coordinateX, coordinateY, widhtImage, heigthImage);
 		}
-
-
 
 		cursor = CBLOCK * 3.5f;
 		return newPage;
@@ -289,7 +289,7 @@ public class DocumentGenerator {
 		if (cursor + BLOCK * 2.0f > HEIGHT) {
 			logger.debug("Cambio de página añadimos la anterior y pasamos a la siguiente");
 
-//			// Inicialización
+			// Inicialización
 			InputStream arial = DocumentGenerator.class.getClassLoader().getResourceAsStream("arial.ttf");
 			font = PDType0Font.load(newDocument, arial, true);
 			contents.close();
@@ -313,22 +313,23 @@ public class DocumentGenerator {
 			String previewText = stringWritter.toString();
 
 			stringWritter.append(word).append(" ");
+			contents.setLeading(DEFAULT_SPACE);
 
 			float widthcalculate = font.getStringWidth(stringWritter.toString()) / 1000 * fontSize;
 
 			if (widthcalculate > WIDTH - (marginLeft + BLOCK * 0.5f)) {
 				contents.showText(previewText);
-				contents.newLineAtOffset(0f, -16.0f);
+				contents.newLine();
 				stringWritter.flush();
 				stringWritter = new StringWriter();
 				stringWritter.append(word).append(" ");
-				cursor = cursor + 16.0f;
+				cursor = cursor + DEFAULT_SPACE;
 			}
 		}
 
 		contents.showText(stringWritter.toString());
-		contents.newLineAtOffset(-marginLeft, -16.0f);
-		cursor = cursor + 16.0f;
+		contents.newLine();
+		cursor = cursor + DEFAULT_SPACE;
 		contents.endText();
 
 	}
