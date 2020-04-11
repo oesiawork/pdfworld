@@ -56,15 +56,7 @@ public class WaterBandAssembler {
 	private PDImageXObject pdImageBand;
 
 	/** The font. */
-	private PDType0Font font;
-
-	public PDType0Font getFont() {
-		return font;
-	}
-
-	public void setFont(PDType0Font font) {
-		this.font = font;
-	}
+	private PDFont font;
 
 	/**
 	 * Insert band.
@@ -135,8 +127,8 @@ public class WaterBandAssembler {
 			pdImageBand = PDImageXObject.createFromFile(
 					WaterBandAssembler.class.getClassLoader().getResource("banda.jpg").getFile(), documentBand);
 		}
-		InputStream arial = WaterBandAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
-		font = PDType0Font.load(documentBand, arial, true);
+		InputStream arial = WaterBandAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");		
+		font = PDType0Font.load(documentBand, arial, false);
 
 		PDPage blankPage = new PDPage();
 		documentBand.addPage(blankPage);
@@ -150,8 +142,8 @@ public class WaterBandAssembler {
 			matrixVertical = Matrix.getTranslateInstance(25f, 100f);
 			matrixVertical.rotate(Math.PI / 2);
 		}
-
-		pushContent(band, contents, font, matrixVertical);
+		
+		pushContent(band, contents,font, matrixVertical);
 
 		insertQRCode(band, documentBand, contents);
 
