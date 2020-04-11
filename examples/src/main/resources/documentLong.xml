@@ -10,7 +10,7 @@
 
 	<storeContentList>
 		<contentType>TITLE</contentType>
-		<textContent>Un nuevo documento os doy, by ${nombre}</textContent>
+		<textContent>${nombre} ha creado un documento para ti</textContent>
 	</storeContentList>
 	<storeContentList>
 		<contentType>BODY</contentType>
@@ -35,7 +35,7 @@
 	</storeContentList>
 	<storeContentList>
 		<contentType>LIST</contentType>
-		<textContent>Jovencillo ${param} de nombre atrevido </textContent>
+		<textContent>Este nombre ${param} era parte de un parámetro complejo </textContent>
 	</storeContentList>
 	<storeContentList>
 		<contentType>BODY</contentType>

@@ -25,6 +25,7 @@ public class DocumentMultipage {
 		File destFile = new File("documentoMulti.pdf");
 		File templatePDF = new File(DocumentMultipage.class.getClassLoader().getResource("documentLong.xml").getFile());
 		PdfTemplate pdfTemplate = TemplateProvider.retrievePdfTemplate(templatePDF);
+		
 		// datos parametrizados para la plantilla de pdf
 		FieldContainer fieldContainer = new FieldContainer();
 		Map<String, String> container = new HashMap<>();
