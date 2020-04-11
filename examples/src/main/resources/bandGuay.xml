@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bandTemplate>
+    <name>Nombre Plantilla</name>
+    <position>LEFT</position>
+    <lineOne>Firmado con sello de Órgano por ${organismName} , por ${owner}  Fecha: ${date}  </lineOne>
+    <lineTree>Identificador del documento ${csv}</lineTree>
+    <lineTwo>Documento verificado en el momento de la firma y verificable en ${urlVerification} .</lineTwo>
+</bandTemplate>

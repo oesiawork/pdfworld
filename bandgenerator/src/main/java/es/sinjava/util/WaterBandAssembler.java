@@ -56,15 +56,7 @@ public class WaterBandAssembler {
 	private PDImageXObject pdImageBand;
 
 	/** The font. */
-	private PDType0Font font;
-
-	public PDType0Font getFont() {
-		return font;
-	}
-
-	public void setFont(PDType0Font font) {
-		this.font = font;
-	}
+	private PDFont font;
 
 	/**
 	 * Insert band.
@@ -74,7 +66,7 @@ public class WaterBandAssembler {
 	 * @return the PD document
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public PDDocument insertBand(PDDocument documentIn, Band band) throws IOException {
+	public void insertBand(PDDocument documentIn, Band band, File outFile) throws IOException {
 
 		logger.info("Documento de entrada tiene {} páginas", documentIn.getNumberOfPages());
 
@@ -107,9 +99,10 @@ public class WaterBandAssembler {
 		overlay.setInputPDF(resized);
 		overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
 		overlay.overlay(new HashMap<Integer, String>());
-		overlay.close();
+		
 		logger.info("Documento de entrada salida con {} páginas", documentIn.getNumberOfPages());
-		return resized;
+		resized.save(outFile);
+		resized.close();
 	}
 
 	public void overlapBand(PDDocument document, Band band, File outFile) throws IOException {
@@ -134,8 +127,8 @@ public class WaterBandAssembler {
 			pdImageBand = PDImageXObject.createFromFile(
 					WaterBandAssembler.class.getClassLoader().getResource("banda.jpg").getFile(), documentBand);
 		}
-		InputStream arial = BeaPDFAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");
-		font = PDType0Font.load(documentBand, arial, true);
+		InputStream arial = WaterBandAssembler.class.getClassLoader().getResourceAsStream("arial.ttf");		
+		font = PDType0Font.load(documentBand, arial, false);
 
 		PDPage blankPage = new PDPage();
 		documentBand.addPage(blankPage);
@@ -149,8 +142,8 @@ public class WaterBandAssembler {
 			matrixVertical = Matrix.getTranslateInstance(25f, 100f);
 			matrixVertical.rotate(Math.PI / 2);
 		}
-
-		pushContent(band, contents, font, matrixVertical);
+		
+		pushContent(band, contents,font, matrixVertical);
 
 		insertQRCode(band, documentBand, contents);
 

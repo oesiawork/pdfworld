@@ -22,12 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.sinjava.factory.BandFactory;
-import es.sinjava.factory.DraftFactory;
 import es.sinjava.model.Band;
 import es.sinjava.model.BandTemplate;
 import es.sinjava.model.FieldContainer;
-import es.sinjava.pdf.model.PdfTemplate;
-import es.sinjava.util.BeaPDFAssembler;
 import es.sinjava.util.WaterBandAssembler;
 
 /**
@@ -56,11 +53,10 @@ public class WaterBandGenerator {
 		WaterBandAssembler wba = new WaterBandAssembler();
 		Band band = BandFactory.getBand(bandTemplate, fc);
 		PDDocument document = PDDocument.load(noband);
-		PDDocument returningFile = wba.insertBand(document, band);
 		if (pdfa) {
-			makePDFA(returningFile);
+			makePDFA(document);
 		}
-		returningFile.save(withBand);
+		wba.insertBand(document, band, withBand);
 	}
 
 	public static void overlapBand(File inputFile, File outFile, BandTemplate bandTemplate, FieldContainer fc, boolean pdfa) throws IOException {

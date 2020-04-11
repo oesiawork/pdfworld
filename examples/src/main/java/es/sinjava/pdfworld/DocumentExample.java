@@ -15,16 +15,15 @@ import es.sinjava.pdf.generator.WaterBandGenerator;
 import es.sinjava.pdf.model.PdfTemplate;
 import es.sinjava.util.TemplateProvider;
 
-public class DocumentAndBand {
+public class DocumentExample {
 
-	private static Logger logger = LoggerFactory.getLogger(DocumentAndBand.class);
+	private static Logger logger = LoggerFactory.getLogger(DocumentExample.class);
 
 	public static void main(String... args) throws Exception {
 		logger.info("Begin Process");
 
-		File destFile = new File("documentoBand.pdf");
-
-		File templatePDF = new File(DocumentAndBand.class.getClassLoader().getResource("document.xml").getFile());
+		File destFile = new File("documentoSimple.pdf");
+		File templatePDF = new File(DocumentExample.class.getClassLoader().getResource("document.xml").getFile());
 		PdfTemplate pdfTemplate = TemplateProvider.retrievePdfTemplate(templatePDF);
 		// datos parametrizados para la plantilla de pdf
 		FieldContainer fieldContainer = new FieldContainer();
@@ -34,18 +33,6 @@ public class DocumentAndBand {
 		fieldContainer.setContainer(container);
 		DocumentGenerator.documentBandFromTemplate(pdfTemplate, fieldContainer, destFile);
 
-		File outFile = new File("DocumentoFinalMontado.pdf");
-
-		// Recuperamos la banda
-		File bandTemplateFile = new File(
-				DocumentAndBand.class.getClassLoader().getResource("bandOrganismo.xml").getFile());
-		BandTemplate bandTemplate = TemplateProvider.retrieveBandTemplate(bandTemplateFile);
-
-		FieldContainer fc = BandSelloOrgano.build("CSV8976450048556", "Andrés Gaudioso Simón",
-				"https://aplicaciones.aragon.es/ccsv_pub/", "13/07/2009", "Instituto Aragonés de la Mujer");
-		bandTemplate.setQrCode("Jovencillo emponzoñado de Wisky que figurota exhibe");
-
-		WaterBandGenerator.overlapBand(destFile, outFile, bandTemplate, fc, true);
 		logger.info("End Process");
 	}
 
